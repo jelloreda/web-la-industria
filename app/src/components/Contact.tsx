@@ -1,7 +1,7 @@
 import { MapPin, Clock, Phone, Instagram as InstagramIcon, ExternalLink } from 'lucide-react'
 import { ShimmerButton } from './magicui/shimmer-button'
 import { LogoMark } from './LogoMark'
-import { BOOKING_URL, INSTAGRAM, IG_URL, MAPS_EMBED, MAPS_URL, PHONE, ADDRESS, HOURS } from '@/lib/brand'
+import { INSTAGRAM, IG_URL, MAPS_EMBED, MAPS_URL, PHONE, ADDRESS, HOURS } from '@/lib/brand'
 
 export function Contact() {
   return (
@@ -80,8 +80,8 @@ export function Contact() {
                 </div>
               </div>
 
-              <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="block mt-6">
-                <ShimmerButton>Reservar cita</ShimmerButton>
+              <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="block mt-6">
+                <ShimmerButton>Cómo llegar</ShimmerButton>
               </a>
             </div>
 
