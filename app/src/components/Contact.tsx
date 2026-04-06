@@ -92,7 +92,7 @@ export function Contact() {
                 src={MAPS_EMBED}
                 width="100%"
                 height="100%"
-                style={{ border: 0, filter: 'grayscale(0.6) contrast(1.1) brightness(0.8)' }}
+                style={{ border: 0, filter: 'grayscale(0.4) contrast(1.0) brightness(1.1)' }}
                 loading="lazy"
                 allowFullScreen
               />
