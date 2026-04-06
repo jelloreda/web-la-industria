@@ -24,7 +24,7 @@ export function Hero() {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 animate-fade-up">
-        <LogoMark iconSize={500} className="mb-8" />
+        <LogoMark iconSize={400} className="mb-8" />
 
         <p className="font-jost font-light text-[10px] uppercase tracking-[0.6em] text-gray-stone mb-6">
           Madrid · 2025
