@@ -3,14 +3,15 @@ import { Card, CardContent } from './ui/card'
 import { Marquee } from './magicui/marquee'
 
 const reviews = [
-  { name: 'Adrián M.',  text: 'El mejor corte que me han hecho en años. Carlos sabe exactamente lo que quieres aunque no lo sepas explicar.',  stars: 5 },
-  { name: 'Pablo R.',   text: 'Ambiente increíble, trato profesional y el resultado habla por sí solo. Ya no voy a ningún otro sitio.',          stars: 5 },
-  { name: 'Miguel Á.',  text: 'Vine de recomendación y entiendo por qué todo el mundo habla de este sitio. Limpio, rápido y muy bien.',          stars: 5 },
-  { name: 'Rubén T.',   text: 'El degradado que me hace Javi es brutal. Llevo meses viniendo y siempre igual de bien.',                          stars: 5 },
-  { name: 'David S.',   text: 'Buen precio, muy buen corte. Sin rodeos, como ellos mismos dicen.',                                              stars: 5 },
-  { name: 'Iñaki F.',   text: 'La barba me la dejaron perfecta. El afeitado con navaja es una experiencia aparte. Muy recomendable.',            stars: 5 },
-  { name: 'Carlos B.',  text: 'Me cuesta encontrar un barbero que entienda mi tipo de pelo. Aquí me escucharon desde el primer día.',            stars: 5 },
-  { name: 'Jorge P.',   text: 'Sitio con personalidad. No es una cadena cualquiera, se nota que hay cuidado en todo. Volveré sin duda.',         stars: 5 },
+  { name: 'Álvaro Fernández',      text: 'Primera vez que voy a la peluqueria y encantado con el resultado! Fui para probar porque no la conocia y desde el minuto 0 el trato ha sido increible. Sanmil es un crack y todo un profesional, le dije que queria cambiar de look y me aconsejo un poco. La verdad que no puedo estar mas contento con el resultado, sin duda repetire!', stars: 5 },
+  { name: 'Marcos Guerra Barrios', text: 'Buenos cortes y muy buen trato por Sanmil y sus compañeros!!', stars: 5 },
+  { name: 'Jaime García',          text: 'Me dejé caer por la barbería ya que a la otra a la que voy me pilla más lejos. La verdad que el trato ha sido genial, te escuchan, te aconsejan y se nota mucha experiencia. Me dejaron genial y me aconsejaron bastantes cosillas para mi pelo. La verdad que si pasas o no por allí, recomiendo ir totalmente.', stars: 5 },
+  { name: 'Diego Lorente Ramos',   text: 'Barbería necesaria por la zona. Novedosa, joven, buen servicio y calidad suprema. 2 veces he estado y a parte de ir todo rodado el corte fue increíble. En solo una palabra PROFESIONALIDAD!!', stars: 5 },
+  { name: 'Eduu_prcl',             text: 'Barbería que recomiendo al 100%. Muy buen ambiente, trato excelente y corte siempre perfecto. Personalmente me corto el pelo con Sanmil y estoy encantado!', stars: 5 },
+  { name: 'Juan Barcelo',          text: 'La mejor barberia!! Es la primera vez que tengo una experiencia tan buena. Samil es majisimo, trata de entender que es lo que quieres y adaptarlo para que quede lo mejor posible. Sin duda alguna volveré.', stars: 5 },
+  { name: 'Daniel Castaño Campo',  text: 'Excelente trato, cortes de pelo personalizados con precio justo, Carlos un genio', stars: 5 },
+  { name: 'Juan Gutiérrez Castaño', text: 'Me lo he cortado con Carlos, un gran profesional en cuanto a asesoramiento y corte de pelo, muy contento, volveré', stars: 5 },
+  { name: 'Victor Canorea',        text: 'Gran descubrimiento, gran profesional Carlos, recomendable 100%', stars: 5 },
 ]
 
 function ReviewCard({ name, text, stars }: typeof reviews[0]) {
