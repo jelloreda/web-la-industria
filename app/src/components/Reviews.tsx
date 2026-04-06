@@ -39,7 +39,7 @@ export function Reviews() {
         <div className="flex items-center gap-3 mb-3">
           <span className="block w-0.5 h-4 bg-gray-stone" />
           <span className="font-jost font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
-            05 · Reseñas
+            Reseñas
           </span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-end gap-4">

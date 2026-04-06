@@ -42,7 +42,7 @@ export function Team() {
         <div className="flex items-center gap-3 mb-3">
           <span className="block w-0.5 h-4 bg-gray-stone" />
           <span className="font-jost font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
-            02 · El Equipo
+            El Equipo
           </span>
         </div>
         <h2 className="font-jost font-black text-3xl sm:text-4xl uppercase text-cream mb-14 tracking-tight">

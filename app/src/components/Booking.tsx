@@ -9,7 +9,7 @@ export function Booking() {
         <div className="flex items-center justify-center gap-3 mb-4">
           <span className="block w-0.5 h-4 bg-gray-stone" />
           <span className="font-jost font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
-            04 · Reservas
+            Reservas
           </span>
           <span className="block w-0.5 h-4 bg-gray-stone" />
         </div>
