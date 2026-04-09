@@ -11,7 +11,7 @@ export function ShimmerButton({ children, className, ...props }: ShimmerButtonPr
     <button
       className={cn(
         'relative overflow-hidden px-10 py-4',
-        'font-jost font-bold text-sm uppercase tracking-[0.25em]',
+        'font-work-sans font-bold text-sm uppercase tracking-[0.25em]',
         'bg-cream text-carbon',
         'transition-transform hover:scale-[1.02] active:scale-[0.98]',
         className,

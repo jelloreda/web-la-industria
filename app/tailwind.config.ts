@@ -13,7 +13,8 @@ const config: Config = {
         'cream-bg':  '#F0ECE5',
       },
       fontFamily: {
-        jost: ['Jost Variable', 'Jost', 'sans-serif'],
+        'work-sans':  ['Work Sans Variable', 'Work Sans', 'sans-serif'],
+        coolvetica:   ['Coolvetica', 'sans-serif'],
       },
     },
   },

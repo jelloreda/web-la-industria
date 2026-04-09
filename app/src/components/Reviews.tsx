@@ -23,11 +23,11 @@ function ReviewCard({ name, text, stars }: typeof reviews[0]) {
             <Star key={i} size={12} className="fill-cream text-cream" />
           ))}
         </div>
-        <p className="font-jost text-xs leading-relaxed text-gray-stone mb-4 line-clamp-3">
+        <p className="font-work-sans text-xs leading-relaxed text-gray-stone mb-4 line-clamp-3">
           "{text}"
         </p>
-        <p className="font-jost font-bold text-[10px] uppercase tracking-[0.2em] text-arena">{name}</p>
-        <p className="font-jost text-[8px] uppercase tracking-[0.2em] text-gray-stone/50 mt-0.5">Google</p>
+        <p className="font-work-sans font-bold text-[10px] uppercase tracking-[0.2em] text-arena">{name}</p>
+        <p className="font-work-sans text-[8px] uppercase tracking-[0.2em] text-gray-stone/50 mt-0.5">Google</p>
       </CardContent>
     </Card>
   )
@@ -39,12 +39,12 @@ export function Reviews() {
       <div className="max-w-5xl mx-auto px-6 mb-12">
         <div className="flex items-center gap-3 mb-3">
           <span className="block w-0.5 h-4 bg-gray-stone" />
-          <span className="font-jost font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
+          <span className="font-work-sans font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
             Reseñas
           </span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-          <h2 className="font-jost font-black text-3xl sm:text-4xl uppercase text-cream tracking-tight">
+          <h2 className="font-coolvetica font-normal text-3xl sm:text-4xl uppercase text-cream tracking-tight">
             Lo que dicen
           </h2>
           <div className="flex items-center gap-2 mb-1">
@@ -53,8 +53,8 @@ export function Reviews() {
                 <Star key={i} size={14} className="fill-cream text-cream" />
               ))}
             </div>
-            <span className="font-jost font-black text-xl text-cream">5.0</span>
-            <span className="font-jost text-[9px] uppercase tracking-[0.2em] text-gray-stone ml-1">
+            <span className="font-coolvetica font-normal text-xl text-cream">5.0</span>
+            <span className="font-work-sans text-[9px] uppercase tracking-[0.2em] text-gray-stone ml-1">
               en Google
             </span>
           </div>

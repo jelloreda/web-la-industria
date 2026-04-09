@@ -26,11 +26,11 @@ export function Hero() {
       <div className="relative z-10 flex flex-col items-center text-center px-6 animate-fade-up">
         <LogoMark iconSize={400} className="mb-8" />
 
-        <p className="font-jost font-light text-[10px] uppercase tracking-[0.6em] text-gray-stone mb-6">
+        <p className="font-work-sans font-light text-[10px] uppercase tracking-[0.6em] text-gray-stone mb-6">
           Madrid · 2025
         </p>
 
-        <h1 className="font-jost font-black text-5xl sm:text-6xl lg:text-7xl uppercase tracking-tight text-cream leading-none mb-6 min-h-[1.2em]">
+        <h1 className="font-coolvetica font-normal text-5xl sm:text-6xl lg:text-7xl uppercase tracking-tight text-cream leading-none mb-6 min-h-[1.2em]">
           <Typewriter
             text="Tu corte, tu estilo."
             speed={60}
@@ -38,7 +38,7 @@ export function Hero() {
           />
         </h1>
 
-        <p className="font-jost font-light text-base text-gray-stone mb-12 tracking-wide">
+        <p className="font-work-sans font-light text-base text-gray-stone mb-12 tracking-wide">
           Sin rodeos.
         </p>
 
@@ -48,7 +48,7 @@ export function Hero() {
           </a>
           <a
             href="#servicios"
-            className="font-jost font-medium text-[10px] uppercase tracking-[0.35em] text-arena hover:text-cream transition-colors border-b border-arena/30 pb-0.5 hover:border-cream/50"
+            className="font-work-sans font-medium text-[10px] uppercase tracking-[0.35em] text-arena hover:text-cream transition-colors border-b border-arena/30 pb-0.5 hover:border-cream/50"
           >
             Ver servicios
           </a>
@@ -57,7 +57,7 @@ export function Hero() {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-stone/60 animate-bounce">
-        <span className="font-jost text-[8px] uppercase tracking-[0.4em]">Scroll</span>
+        <span className="font-work-sans text-[8px] uppercase tracking-[0.4em]">Scroll</span>
         <ChevronDown size={14} />
       </div>
     </section>

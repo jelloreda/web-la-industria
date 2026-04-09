@@ -1,4 +1,12 @@
-@import '@fontsource-variable/jost';
+@import '@fontsource-variable/work-sans';
+
+@font-face {
+  font-family: 'Coolvetica';
+  src: url('./assets/fonts/coolvetica/Coolvetica Rg.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
@@ -9,7 +17,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Jost Variable', 'Jost', sans-serif;
+  font-family: 'Work Sans Variable', 'Work Sans', sans-serif;
   background: #333231;
   color: #E9E4DB;
   overflow-x: hidden;

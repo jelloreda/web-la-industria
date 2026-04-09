@@ -27,7 +27,7 @@ function GalleryPhoto({ src, alt, index }: { src: string; alt: string; index: nu
         className="w-full h-full object-cover aspect-video group-hover:scale-105 transition-transform duration-700"
       />
       <div className="absolute inset-0 bg-carbon/0 group-hover:bg-carbon/50 transition-colors duration-500 flex items-center justify-center">
-        <span className="font-jost font-light text-[9px] uppercase tracking-[0.5em] text-cream opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        <span className="font-work-sans font-light text-[9px] uppercase tracking-[0.5em] text-cream opacity-0 group-hover:opacity-100 transition-opacity duration-500">
           La Industria · Madrid
         </span>
       </div>
@@ -41,11 +41,11 @@ export function Gallery() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-3">
           <span className="block w-0.5 h-4 bg-gray-stone" />
-          <span className="font-jost font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
+          <span className="font-work-sans font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
             El Espacio
           </span>
         </div>
-        <h2 className="font-jost font-black text-3xl sm:text-4xl uppercase text-cream mb-14 tracking-tight">
+        <h2 className="font-coolvetica font-normal text-3xl sm:text-4xl uppercase text-cream mb-14 tracking-tight">
           Donde sucede
         </h2>
 

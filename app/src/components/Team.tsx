@@ -19,14 +19,14 @@ function BarberCard({ name, role, spec, initial, index }: typeof barbers[0] & { 
     >
       {/* Avatar placeholder */}
       <div className="h-56 bg-carbon flex items-center justify-center relative overflow-hidden">
-        <span className="font-jost font-black text-6xl text-gray-stone/30 select-none">{initial}</span>
+        <span className="font-coolvetica font-normal text-6xl text-gray-stone/30 select-none">{initial}</span>
         <div className="absolute inset-0 bg-gradient-to-t from-dark2/60 to-transparent" />
       </div>
 
       <CardContent className="pt-5 pb-6">
-        <p className="font-jost font-black text-base text-cream mb-1">{name}</p>
-        <p className="font-jost text-[9px] uppercase tracking-[0.3em] text-arena mb-3">{role}</p>
-        <p className="font-jost text-xs text-gray-stone">{spec}</p>
+        <p className="font-coolvetica font-normal text-base text-cream mb-1">{name}</p>
+        <p className="font-work-sans text-[9px] uppercase tracking-[0.3em] text-arena mb-3">{role}</p>
+        <p className="font-work-sans text-xs text-gray-stone">{spec}</p>
       </CardContent>
 
       {/* BorderBeam on hover */}
@@ -41,11 +41,11 @@ export function Team() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-3">
           <span className="block w-0.5 h-4 bg-gray-stone" />
-          <span className="font-jost font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
+          <span className="font-work-sans font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
             El Equipo
           </span>
         </div>
-        <h2 className="font-jost font-black text-3xl sm:text-4xl uppercase text-cream mb-14 tracking-tight">
+        <h2 className="font-coolvetica font-normal text-3xl sm:text-4xl uppercase text-cream mb-14 tracking-tight">
           Tu barber
         </h2>
 

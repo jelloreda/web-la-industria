@@ -36,7 +36,7 @@ export function Nav() {
         {/* Logo */}
         <a href="#hero" className="flex items-center gap-3 group">
           <LogoMark showText={false} iconSize={32} />
-          <span className="font-jost font-bold tracking-[0.2em] uppercase text-xs text-cream hidden sm:block">
+          <span className="font-work-sans font-bold tracking-[0.2em] uppercase text-xs text-cream hidden sm:block">
             La Industria
           </span>
         </a>
@@ -47,7 +47,7 @@ export function Nav() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className="font-jost font-medium text-[10px] uppercase tracking-[0.3em] text-arena hover:text-cream transition-colors duration-200"
+                className="font-work-sans font-medium text-[10px] uppercase tracking-[0.3em] text-arena hover:text-cream transition-colors duration-200"
               >
                 {l.label}
               </a>
@@ -76,7 +76,7 @@ export function Nav() {
                 <SheetClose asChild key={l.href}>
                   <a
                     href={l.href}
-                    className="font-jost font-medium text-xs uppercase tracking-[0.35em] text-arena hover:text-cream transition-colors"
+                    className="font-work-sans font-medium text-xs uppercase tracking-[0.35em] text-arena hover:text-cream transition-colors"
                   >
                     {l.label}
                   </a>

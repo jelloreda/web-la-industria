@@ -22,11 +22,11 @@ function ServiceCard({ name, price, desc, index }: typeof services[0] & { index:
     >
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
-          <h3 className="font-jost font-bold text-sm uppercase tracking-[0.2em] text-cream">
+          <h3 className="font-coolvetica font-normal text-sm uppercase tracking-[0.2em] text-cream">
             {name}
           </h3>
           <span
-            className="font-jost font-black text-lg text-cream shrink-0"
+            className="font-work-sans font-black text-lg text-cream shrink-0"
             style={{
               background: 'linear-gradient(105deg, #E9E4DB 0%, #A4A4A4 50%, #E9E4DB 100%)',
               backgroundSize: '200% 100%',
@@ -40,7 +40,7 @@ function ServiceCard({ name, price, desc, index }: typeof services[0] & { index:
         </div>
       </CardHeader>
       <CardContent>
-        <p className="font-jost text-xs leading-relaxed text-gray-stone">{desc}</p>
+        <p className="font-work-sans text-xs leading-relaxed text-gray-stone">{desc}</p>
       </CardContent>
     </Card>
   )
@@ -52,11 +52,11 @@ export function Services() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-3">
           <span className="block w-0.5 h-4 bg-gray-stone" />
-          <span className="font-jost font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
+          <span className="font-work-sans font-medium text-[9px] uppercase tracking-[0.45em] text-gray-stone">
             Servicios
           </span>
         </div>
-        <h2 className="font-jost font-black text-3xl sm:text-4xl uppercase text-cream mb-14 tracking-tight">
+        <h2 className="font-coolvetica font-normal text-3xl sm:text-4xl uppercase text-cream mb-14 tracking-tight">
           Lo que hacemos
         </h2>
 
