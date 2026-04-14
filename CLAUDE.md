@@ -26,9 +26,9 @@ npx playwright test --ui      # Interactive test runner
 
 ### Source layout (`app/src/`)
 
-- `App.tsx` — Composes all 8 section components in order: Nav → Hero → Services → Team → Booking → Reviews → Gallery → Contact
+- `App.tsx` — Composes all 7 section components in order: Nav → Hero → Services → Team → Booking → Gallery → Contact
 - `components/` — One file per section, plus `magicui/` (Particles, Typewriter, ShimmerButton, BorderBeam, Marquee) and `ui/` (shadcn Card, Button, Badge, Sheet)
-- `lib/brand.ts` — Single source of truth for all brand data: booking URL, Instagram, phone, address, hours, map embeds
+- `lib/brand.ts` — Single source of truth for all brand data: booking URL, Instagram, WhatsApp, phone, address, hours, map embeds
 - `lib/utils.ts` — `cn()` helper (clsx + tailwind-merge)
 
 ### Styling
@@ -57,9 +57,23 @@ Path alias `@/` maps to `app/src/`.
 
 Playwright tests in `tests/la-industria.spec.ts` cover: no console errors, hero visibility, booking CTA URL/attributes, Services section background, and desktop/mobile screenshots. CI runs on GitHub Actions (`push` to main and PRs).
 
+### Section background colors
+
+Sections alternate between `bg-carbon` and `bg-dark2`:
+
+| Section | Background |
+|---------|-----------|
+| Hero | `dark2` |
+| Services | `carbon` |
+| Team | `dark2` |
+| Booking | `carbon` |
+| Gallery | `dark2` |
+| Contact | `dark2` |
+| Footer | `carbon` |
+
 ### Deployment
 
-Vercel reads `app/vercel.json`: build command `npm run build`, output directory `..` (the repo root where `index.html` lands).
+Vercel reads `app/vercel.json`: build command `npm run build`, output directory `..` (the repo root where `index.html` lands). Security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) are defined there and applied to all routes.
 
 ### Design spec
 
