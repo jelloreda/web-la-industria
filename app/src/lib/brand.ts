@@ -1,4 +1,5 @@
-export const BOOKING_URL = 'https://cut.yeasyapp.com/J0W7kF'
+export const BOOKING_URL   = 'https://cut.yeasyapp.com/J0W7kF'
+export const WHATSAPP_URL  = 'https://wa.me/34627015904'
 export const INSTAGRAM   = '@laindustria.barber'
 export const IG_URL      = 'https://www.instagram.com/laindustria.barber'
 export const MAPS_EMBED  = 'https://maps.google.com/maps?q=Avenida+Reina+Victoria+41+Madrid&z=16&output=embed'

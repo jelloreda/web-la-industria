@@ -1,7 +1,7 @@
-import { MapPin, Clock, Phone, Instagram as InstagramIcon, ExternalLink } from 'lucide-react'
+import { MapPin, Clock, Phone, Instagram as InstagramIcon, MessageCircle, ExternalLink } from 'lucide-react'
 import { ShimmerButton } from './magicui/shimmer-button'
 import { LogoMark } from './LogoMark'
-import { INSTAGRAM, IG_URL, MAPS_EMBED, MAPS_URL, PHONE, ADDRESS, HOURS } from '@/lib/brand'
+import { INSTAGRAM, IG_URL, MAPS_EMBED, MAPS_URL, PHONE, ADDRESS, HOURS, WHATSAPP_URL } from '@/lib/brand'
 
 export function Contact() {
   return (
@@ -58,6 +58,21 @@ export function Contact() {
                   <p className="font-work-sans font-bold text-[10px] uppercase tracking-[0.3em] text-arena mb-1">Teléfono</p>
                   <a
                     href={`tel:${PHONE.replace(/\s/g, '')}`}
+                    className="font-work-sans text-sm text-cream hover:text-arena transition-colors"
+                  >
+                    {PHONE}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <MessageCircle size={16} className="text-arena mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-work-sans font-bold text-[10px] uppercase tracking-[0.3em] text-arena mb-1">WhatsApp</p>
+                  <a
+                    href={WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="font-work-sans text-sm text-cream hover:text-arena transition-colors"
                   >
                     {PHONE}

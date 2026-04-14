@@ -1,9 +1,42 @@
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Star } from 'lucide-react'
 import { LogoMark } from './LogoMark'
 import { Particles } from './magicui/particles'
 import { Typewriter } from './magicui/typewriter'
 import { ShimmerButton } from './magicui/shimmer-button'
+import { Marquee } from './magicui/marquee'
+import { Card, CardContent } from './ui/card'
 import { BOOKING_URL } from '@/lib/brand'
+
+const reviews = [
+  { name: 'Álvaro Fernández',      text: 'Primera vez que voy a la peluqueria y encantado con el resultado! Sanmil es un crack y todo un profesional, le dije que queria cambiar de look y me aconsejo un poco. Sin duda repetire!', stars: 5 },
+  { name: 'Marcos Guerra Barrios', text: 'Buenos cortes y muy buen trato por Sanmil y sus compañeros!!', stars: 5 },
+  { name: 'Jaime García',          text: 'La verdad que el trato ha sido genial, te escuchan, te aconsejan y se nota mucha experiencia. Recomiendo ir totalmente.', stars: 5 },
+  { name: 'Diego Lorente Ramos',   text: 'Barbería necesaria por la zona. Novedosa, joven, buen servicio y calidad suprema. En solo una palabra PROFESIONALIDAD!!', stars: 5 },
+  { name: 'Eduu_prcl',             text: 'Barbería que recomiendo al 100%. Muy buen ambiente, trato excelente y corte siempre perfecto.', stars: 5 },
+  { name: 'Juan Barcelo',          text: 'La mejor barberia!! Samil es majisimo, trata de entender que es lo que quieres. Sin duda alguna volveré.', stars: 5 },
+  { name: 'Daniel Castaño Campo',  text: 'Excelente trato, cortes de pelo personalizados con precio justo, Carlos un genio', stars: 5 },
+  { name: 'Juan Gutiérrez Castaño', text: 'Me lo he cortado con Carlos, un gran profesional en cuanto a asesoramiento y corte de pelo, muy contento, volveré', stars: 5 },
+  { name: 'Victor Canorea',        text: 'Gran descubrimiento, gran profesional Carlos, recomendable 100%', stars: 5 },
+]
+
+function ReviewCard({ name, text, stars }: typeof reviews[0]) {
+  return (
+    <Card className="w-64 shrink-0 p-4">
+      <CardContent className="p-0">
+        <div className="flex items-center gap-1 mb-2">
+          {Array.from({ length: stars }).map((_, i) => (
+            <Star key={i} size={10} className="fill-cream text-cream" />
+          ))}
+        </div>
+        <p className="font-work-sans text-[11px] leading-relaxed text-gray-stone mb-3 line-clamp-2">
+          "{text}"
+        </p>
+        <p className="font-work-sans font-bold text-[9px] uppercase tracking-[0.2em] text-arena">{name}</p>
+        <p className="font-work-sans text-[8px] uppercase tracking-[0.2em] text-gray-stone/50 mt-0.5">Google</p>
+      </CardContent>
+    </Card>
+  )
+}
 
 export function Hero() {
   return (
@@ -23,7 +56,7 @@ export function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 animate-fade-up">
+      <div className="relative z-10 flex flex-col items-center text-center px-6 animate-fade-up w-full">
         <LogoMark iconSize={400} className="mb-8" />
 
         <p className="font-work-sans font-light text-[10px] uppercase tracking-[0.6em] text-gray-stone mb-6">
@@ -42,7 +75,7 @@ export function Hero() {
           Sin rodeos.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
+        <div className="flex flex-col sm:flex-row gap-4 items-center mb-16">
           <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
             <ShimmerButton>Reservar cita</ShimmerButton>
           </a>
@@ -52,6 +85,22 @@ export function Hero() {
           >
             Ver servicios
           </a>
+        </div>
+
+        {/* Reviews marquee */}
+        <div className="w-screen -mx-6 overflow-hidden">
+          <div className="flex items-center gap-3 justify-center mb-4">
+            <div className="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} size={11} className="fill-cream text-cream" />
+              ))}
+            </div>
+            <span className="font-coolvetica font-normal text-base text-cream">5.0</span>
+            <span className="font-work-sans text-[9px] uppercase tracking-[0.2em] text-gray-stone">en Google</span>
+          </div>
+          <Marquee duration={40}>
+            {reviews.map(r => <ReviewCard key={r.name} {...r} />)}
+          </Marquee>
         </div>
       </div>
 

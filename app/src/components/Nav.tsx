@@ -10,7 +10,6 @@ const links = [
   { label: 'Servicios', href: '#servicios' },
   { label: 'Equipo',    href: '#equipo'    },
   { label: 'Reservas',  href: '#reservas'  },
-  { label: 'Reseñas',   href: '#resenas'   },
   { label: 'Contacto',  href: '#contacto'  },
 ]
 
