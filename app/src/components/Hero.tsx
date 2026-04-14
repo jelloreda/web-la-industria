@@ -42,7 +42,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center bg-dark2 overflow-hidden"
+      className="relative min-h-screen flex flex-col bg-dark2 overflow-hidden"
     >
       <Particles quantity={70} color="#7F7F7D" />
 
@@ -55,15 +55,15 @@ export function Hero() {
         }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 animate-fade-up w-full">
-        <LogoMark iconSize={400} className="mb-8" />
+      {/* Main content — vertically centered in available space */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 pt-20 pb-8 animate-fade-up">
+        <LogoMark iconSize={400} className="mb-6" />
 
-        <p className="font-work-sans font-light text-[10px] uppercase tracking-[0.6em] text-gray-stone mb-6">
+        <p className="font-work-sans font-light text-[10px] uppercase tracking-[0.6em] text-gray-stone mb-5">
           Madrid · 2025
         </p>
 
-        <h1 className="font-coolvetica font-normal text-5xl sm:text-6xl lg:text-7xl uppercase tracking-tight text-cream leading-none mb-6 min-h-[1.2em]">
+        <h1 className="font-coolvetica font-normal text-3xl sm:text-4xl lg:text-5xl uppercase tracking-tight text-cream leading-none mb-8 min-h-[1.2em]">
           <Typewriter
             text="Tu corte, tu estilo."
             speed={60}
@@ -71,11 +71,7 @@ export function Hero() {
           />
         </h1>
 
-        <p className="font-work-sans font-light text-base text-gray-stone mb-12 tracking-wide">
-          Sin rodeos.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 items-center mb-16">
+        <div className="flex flex-col sm:flex-row gap-4 items-center">
           <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
             <ShimmerButton>Reservar cita</ShimmerButton>
           </a>
@@ -86,22 +82,22 @@ export function Hero() {
             Ver servicios
           </a>
         </div>
+      </div>
 
-        {/* Reviews marquee */}
-        <div className="w-screen -mx-6 overflow-hidden">
-          <div className="flex items-center gap-3 justify-center mb-4">
-            <div className="flex gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} size={11} className="fill-cream text-cream" />
-              ))}
-            </div>
-            <span className="font-coolvetica font-normal text-base text-cream">5.0</span>
-            <span className="font-work-sans text-[9px] uppercase tracking-[0.2em] text-gray-stone">en Google</span>
+      {/* Reviews strip — anchored to bottom, above scroll indicator */}
+      <div className="relative z-10 w-full overflow-hidden pb-20">
+        <div className="flex items-center gap-3 justify-center mb-4">
+          <div className="flex gap-0.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star key={i} size={11} className="fill-cream text-cream" />
+            ))}
           </div>
-          <Marquee duration={40}>
-            {reviews.map(r => <ReviewCard key={r.name} {...r} />)}
-          </Marquee>
+          <span className="font-coolvetica font-normal text-base text-cream">5.0</span>
+          <span className="font-work-sans text-[9px] uppercase tracking-[0.2em] text-gray-stone">en Google</span>
         </div>
+        <Marquee duration={40}>
+          {reviews.map(r => <ReviewCard key={r.name} {...r} />)}
+        </Marquee>
       </div>
 
       {/* Scroll indicator */}

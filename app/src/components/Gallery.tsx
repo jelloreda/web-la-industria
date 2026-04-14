@@ -37,7 +37,7 @@ function GalleryPhoto({ src, alt, index }: { src: string; alt: string; index: nu
 
 export function Gallery() {
   return (
-    <section id="galeria" className="bg-carbon py-24 px-6">
+    <section id="galeria" className="bg-dark2 py-24 px-6">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-3 mb-3">
           <span className="block w-0.5 h-4 bg-gray-stone" />
