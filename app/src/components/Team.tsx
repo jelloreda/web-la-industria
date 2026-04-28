@@ -4,7 +4,7 @@ import { BorderBeam } from './magicui/border-beam'
 
 const barbers = [
   { name: 'Sanmil', role: 'Barber', spec: 'Fade & Classic Cut',  initial: 'S' },
-  { name: 'Charlie', role: 'Barber', spec: 'Barba & Styling',    initial: 'C' },
+  { name: 'Mateo',   role: 'Barber', spec: 'Barba & Styling',    initial: 'M' },
   { name: 'Wuill',  role: 'Barber', spec: 'Degradados & Diseño', initial: 'W' },
 ]
 
