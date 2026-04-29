@@ -1,18 +1,18 @@
 import { Card, CardHeader, CardContent } from './ui/card'
-import { SERVICE_BOOKING_URLS } from '@/lib/brand'
+import { BOOKING_URL } from '@/lib/brand'
 
 const services = [
-  { name: 'Corte de pelo standard',      price: '16 €',       desc: 'Corte clásico o moderno adaptado a tu estilo.',                                  bookingKey: 'corte_standard' },
-  { name: 'Corte de pelo premium',        price: '18 €',       desc: 'Corte con acabado y atención al detalle superior.',                              bookingKey: 'corte_premium' },
-  { name: 'Corte completo a tijera',      price: 'desde 20 €', desc: 'Corte íntegramente a tijera para un resultado natural y preciso.',               bookingKey: 'corte_tijera' },
-  { name: 'Corte y barba standard',       price: '25 €',       desc: 'Corte más arreglo de barba. Combinación completa.',                              bookingKey: 'corte_barba_standard' },
-  { name: 'Corte y barba premium',        price: '27 €',       desc: 'Versión premium del corte y barba, con acabado de detalle.',                     bookingKey: 'corte_barba_premium' },
-  { name: 'Corte a tijera y barba',       price: 'desde 27 €', desc: 'Corte a tijera con perfilado y definición de barba incluidos.',                  bookingKey: 'corte_tijera_barba' },
-  { name: 'Arreglo de barba premium',     price: '15 €',       desc: 'Perfilado, definición y acabado impecable de tu barba.',                        bookingKey: 'arreglo_barba' },
-  { name: 'Corte pelo jubilado',          price: '12 €',       desc: 'Servicio especial para nuestros clientes jubilados.',                            bookingKey: 'corte_jubilado' },
+  { name: 'Corte de pelo standard',      price: '16 €',       desc: 'Corte clásico o moderno adaptado a tu estilo.'                                  },
+  { name: 'Corte de pelo premium',        price: '18 €',       desc: 'Corte con acabado y atención al detalle superior.'                              },
+  { name: 'Corte completo a tijera',      price: 'desde 20 €', desc: 'Corte íntegramente a tijera para un resultado natural y preciso.'               },
+  { name: 'Corte y barba standard',       price: '25 €',       desc: 'Corte más arreglo de barba. Combinación completa.'                              },
+  { name: 'Corte y barba premium',        price: '27 €',       desc: 'Versión premium del corte y barba, con acabado de detalle.'                     },
+  { name: 'Corte a tijera y barba',       price: 'desde 27 €', desc: 'Corte a tijera con perfilado y definición de barba incluidos.'                  },
+  { name: 'Arreglo de barba premium',     price: '15 €',       desc: 'Perfilado, definición y acabado impecable de tu barba.'                        },
+  { name: 'Corte pelo jubilado',          price: '12 €',       desc: 'Servicio especial para nuestros clientes jubilados.'                            },
 ]
 
-function ServiceCard({ name, price, desc, bookingKey, index }: typeof services[0] & { index: number }) {
+function ServiceCard({ name, price, desc, index }: typeof services[0] & { index: number }) {
   return (
     <Card
       className="group hover:border-cream/30 transition-colors duration-500"
@@ -43,7 +43,7 @@ function ServiceCard({ name, price, desc, bookingKey, index }: typeof services[0
       <CardContent>
         <p className="font-work-sans text-xs leading-relaxed text-gray-stone mb-4">{desc}</p>
         <a
-          href={SERVICE_BOOKING_URLS[bookingKey]}
+          href={BOOKING_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block font-work-sans font-medium text-[10px] uppercase tracking-[0.2em] text-cream/70 hover:text-cream border border-cream/20 hover:border-cream/50 px-3 py-1.5 transition-colors duration-300"
