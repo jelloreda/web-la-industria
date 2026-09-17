@@ -79,6 +79,6 @@ npx playwright test --ui   # modo interactivo
 
 ## Despliegue
 
-Vercel lee `app/vercel.json`. El build genera `index.html` en la raíz del repo (`outputDirectory: ".."`). La rama `main` despliega automáticamente a producción.
+Vercel lee el `vercel.json` de la raíz del repo (el proyecto está enlazado a la raíz, no a `app/`). El build genera `index.html` en la raíz del repo (`outputDirectory: "."`). La rama `main` despliega automáticamente a producción.
 
 Security headers activos en todas las rutas: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.

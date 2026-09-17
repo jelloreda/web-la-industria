@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Menu } from 'lucide-react'
 import { LogoMark } from './LogoMark'
 import { Button } from './ui/button'
-import { Sheet, SheetTrigger, SheetContent, SheetClose } from './ui/sheet'
+import { Sheet, SheetTrigger, SheetContent, SheetClose, SheetTitle } from './ui/sheet'
 import { cn } from '@/lib/utils'
 import { BOOKING_URL } from '@/lib/brand'
 
@@ -70,6 +70,7 @@ export function Nav() {
             <Menu size={20} />
           </SheetTrigger>
           <SheetContent>
+            <SheetTitle>Menú de navegación</SheetTitle>
             <div className="mt-12 flex flex-col gap-8">
               {links.map(l => (
                 <SheetClose asChild key={l.href}>
