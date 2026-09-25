@@ -46,3 +46,6 @@ body {
 }
 
 .animate-fade-up { animation: fade-up 0.6s ease forwards; }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

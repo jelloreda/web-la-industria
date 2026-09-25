@@ -28,11 +28,31 @@ test.describe('La Industria Landing Page', () => {
     await expect(hero.locator('svg').first()).toBeVisible()
   })
 
-  test('booking CTA is present and points to Yeasy', async ({ page }) => {
-    const cta = page.locator('[data-testid="cta-reservar"]')
-    await expect(cta).toBeVisible()
-    const href = await cta.getAttribute('href')
-    expect(href).toBe('https://cut.yeasyapp.com/J0W7kF')
+  test('each location card books on its own Yeasy account', async ({ page }) => {
+    const guzman = page.locator('[data-testid="cta-reservar-guzman-el-bueno"]')
+    const arguelles = page.locator('[data-testid="cta-reservar-arguelles"]')
+    await expect(guzman).toHaveAttribute('href', 'https://cut.yeasyapp.com/J0W7kF')
+    await expect(arguelles).toHaveAttribute('href', 'https://cut.yeasyapp.com/bVr605')
+    await expect(guzman).toHaveAttribute('target', '_blank')
+    await expect(arguelles).toHaveAttribute('target', '_blank')
+  })
+
+  test('nav Reservar opens the location picker with both locations', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 })
+    await page.getByRole('navigation').getByRole('button', { name: 'Reservar' }).click()
+    const picker = page.locator('[data-testid="location-picker"]')
+    await expect(picker).toBeVisible()
+    await expect(picker.locator('[data-testid="picker-guzman-el-bueno"]'))
+      .toHaveAttribute('href', 'https://cut.yeasyapp.com/J0W7kF')
+    await expect(picker.locator('[data-testid="picker-arguelles"]'))
+      .toHaveAttribute('href', 'https://cut.yeasyapp.com/bVr605')
+  })
+
+  test('contact tabs switch location details', async ({ page }) => {
+    const contact = page.locator('#contacto')
+    await expect(contact).toContainText('Avenida Reina Victoria 41')
+    await contact.getByRole('tab', { name: /Argüelles/ }).click()
+    await expect(contact).toContainText('Calle de Altamirano 3')
   })
 
   test('services section has carbon background', async ({ page }) => {

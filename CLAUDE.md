@@ -26,9 +26,11 @@ npx playwright test --ui      # Interactive test runner
 
 ### Source layout (`app/src/`)
 
-- `App.tsx` — Composes all 7 section components in order: Nav → Hero → Services → Team → Booking → Gallery → Contact
+- `App.tsx` — Composes all 6 section components in order: Nav → Hero → Services → Team → Booking → Contact (photos of each sede live inside its Booking card; there is no separate gallery)
 - `components/` — One file per section, plus `magicui/` (Particles, Typewriter, ShimmerButton, BorderBeam, Marquee) and `ui/` (shadcn Card, Button, Badge, Sheet)
-- `lib/brand.ts` — Single source of truth for all brand data: booking URL, Instagram, WhatsApp, phone, address, hours, map embeds
+- `lib/brand.ts` — Single source of truth for brand data. `LOCATIONS` holds both sedes (Guzmán el Bueno, Argüelles), each with its own Yeasy booking URL, address, phone/WhatsApp, hours, map links and barbers. `CAMPAIGN_ACTIVE` toggles the temporary "dos sedes" hero campaign (planned until end of October 2026).
+- `components/LocationPicker.tsx` — Context + dialog ("Elige tu sede"). Any generic "Reservar" CTA (nav, hero, services) calls `useLocationPicker()` to open it; location-specific CTAs (Booking cards, Contact tabs) link straight to that sede's Yeasy URL.
+- `components/HeroCampaign.tsx` — Campaign hero shown instead of the classic hero while `CAMPAIGN_ACTIVE` is true; the Nav also shows a cream announcement bar then.
 - `lib/utils.ts` — `cn()` helper (clsx + tailwind-merge)
 
 ### Styling
@@ -55,7 +57,7 @@ Path alias `@/` maps to `app/src/`.
 
 ### Testing
 
-Playwright tests in `tests/la-industria.spec.ts` cover: no console errors, hero visibility, booking CTA URL/attributes, Services section background, and desktop/mobile screenshots. CI runs on GitHub Actions (`push` to main and PRs).
+Playwright tests in `tests/la-industria.spec.ts` cover: no console errors, hero visibility, per-sede booking URLs, the location picker, Contact tabs, Services section background, and desktop/mobile screenshots. CI runs on GitHub Actions (`push` to main and PRs).
 
 ### Section background colors
 
@@ -67,7 +69,6 @@ Sections alternate between `bg-carbon` and `bg-dark2`:
 | Services | `carbon` |
 | Team | `dark2` |
 | Booking | `carbon` |
-| Gallery | `dark2` |
 | Contact | `dark2` |
 | Footer | `carbon` |
 

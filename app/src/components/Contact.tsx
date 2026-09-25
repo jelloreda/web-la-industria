@@ -1,9 +1,14 @@
+import { useState } from 'react'
 import { MapPin, Clock, Phone, Instagram as InstagramIcon, MessageCircle, ExternalLink } from 'lucide-react'
 import { ShimmerButton } from './magicui/shimmer-button'
 import { LogoMark } from './LogoMark'
-import { INSTAGRAM, IG_URL, MAPS_EMBED, MAPS_URL, PHONE, ADDRESS, HOURS, WHATSAPP_URL } from '@/lib/brand'
+import { cn } from '@/lib/utils'
+import { INSTAGRAM, IG_URL, LOCATIONS } from '@/lib/brand'
 
 export function Contact() {
+  const [active, setActive] = useState(0)
+  const loc = LOCATIONS[active]
+
   return (
     <>
       <section id="contacto" className="bg-dark2 py-24 px-6">
@@ -14,11 +19,31 @@ export function Contact() {
               Contacto
             </span>
           </div>
-          <h2 className="font-coolvetica font-normal text-3xl sm:text-4xl uppercase text-cream mb-14 tracking-tight">
+          <h2 className="font-coolvetica font-normal text-3xl sm:text-4xl uppercase text-cream mb-10 tracking-tight">
             Encuéntranos
           </h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div role="tablist" aria-label="Sedes" className="flex gap-6 sm:gap-8 border-b border-cream/10 mb-12">
+            {LOCATIONS.map((l, i) => (
+              <button
+                key={l.id}
+                type="button"
+                role="tab"
+                id={`tab-${l.id}`}
+                aria-selected={i === active}
+                aria-controls="panel-sede"
+                onClick={() => setActive(i)}
+                className={cn(
+                  'py-4 -mb-px border-b-2 transition-colors',
+                  i === active ? 'border-cream text-cream' : 'border-transparent text-gray-stone hover:text-arena',
+                )}
+              >
+                <span className="font-coolvetica text-lg sm:text-[22px] uppercase leading-none">{l.name}</span>
+              </button>
+            ))}
+          </div>
+
+          <div role="tabpanel" id="panel-sede" aria-labelledby={`tab-${loc.id}`} className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Info */}
             <div className="space-y-8">
               <div className="flex items-start gap-4">
@@ -26,12 +51,12 @@ export function Contact() {
                 <div>
                   <p className="font-work-sans font-bold text-[10px] uppercase tracking-[0.3em] text-arena mb-1">Ubicación</p>
                   <a
-                    href={MAPS_URL}
+                    href={loc.mapsUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-work-sans text-sm text-cream hover:text-arena transition-colors flex items-center gap-2"
                   >
-                    {ADDRESS}
+                    {loc.address}
                     <ExternalLink size={11} className="text-gray-stone" />
                   </a>
                 </div>
@@ -42,7 +67,7 @@ export function Contact() {
                 <div>
                   <p className="font-work-sans font-bold text-[10px] uppercase tracking-[0.3em] text-arena mb-2">Horario</p>
                   <div className="space-y-1">
-                    {HOURS.map(h => (
+                    {loc.hours.map(h => (
                       <div key={h.days} className="flex gap-6">
                         <span className="font-work-sans text-xs text-gray-stone w-36">{h.days}</span>
                         <span className="font-work-sans text-xs text-cream">{h.time}</span>
@@ -57,10 +82,10 @@ export function Contact() {
                 <div>
                   <p className="font-work-sans font-bold text-[10px] uppercase tracking-[0.3em] text-arena mb-1">Teléfono</p>
                   <a
-                    href={`tel:${PHONE.replace(/\s/g, '')}`}
+                    href={`tel:${loc.phone.replace(/\s/g, '')}`}
                     className="font-work-sans text-sm text-cream hover:text-arena transition-colors"
                   >
-                    {PHONE}
+                    {loc.phone}
                   </a>
                 </div>
               </div>
@@ -70,12 +95,12 @@ export function Contact() {
                 <div>
                   <p className="font-work-sans font-bold text-[10px] uppercase tracking-[0.3em] text-arena mb-1">WhatsApp</p>
                   <a
-                    href={WHATSAPP_URL}
+                    href={loc.whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-work-sans text-sm text-cream hover:text-arena transition-colors"
                   >
-                    {PHONE}
+                    {loc.phone}
                   </a>
                 </div>
               </div>
@@ -95,16 +120,27 @@ export function Contact() {
                 </div>
               </div>
 
-              <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="block mt-6">
-                <ShimmerButton>Cómo llegar</ShimmerButton>
-              </a>
+              <div className="flex flex-wrap items-center gap-6 mt-6">
+                <a href={loc.bookingUrl} target="_blank" rel="noopener noreferrer">
+                  <ShimmerButton>Reservar aquí</ShimmerButton>
+                </a>
+                <a
+                  href={loc.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-work-sans font-medium text-[10px] uppercase tracking-[0.35em] text-arena hover:text-cream transition-colors border-b border-arena/30 pb-0.5 hover:border-cream/50"
+                >
+                  Cómo llegar
+                </a>
+              </div>
             </div>
 
             {/* Map */}
             <div className="h-80 lg:h-auto min-h-64 bg-carbon overflow-hidden border border-white/5">
               <iframe
-                title="La Industria Barbería en Google Maps"
-                src={MAPS_EMBED}
+                key={loc.id}
+                title={`La Industria ${loc.name} en Google Maps`}
+                src={loc.mapsEmbed}
                 width="100%"
                 height="100%"
                 style={{ border: 0, filter: 'grayscale(0.4) contrast(1.0) brightness(1.1)' }}

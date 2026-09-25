@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react'
-import { Menu } from 'lucide-react'
+import { ArrowRight, Menu } from 'lucide-react'
 import { LogoMark } from './LogoMark'
 import { Button } from './ui/button'
 import { Sheet, SheetTrigger, SheetContent, SheetClose, SheetTitle } from './ui/sheet'
 import { cn } from '@/lib/utils'
-import { BOOKING_URL } from '@/lib/brand'
+import { CAMPAIGN_ACTIVE } from '@/lib/brand'
+import { useLocationPicker } from './LocationPicker'
 
 const links = [
   { label: 'Servicios', href: '#servicios' },
   { label: 'Equipo',    href: '#equipo'    },
-  { label: 'Reservas',  href: '#reservas'  },
+  { label: 'Sedes',     href: '#reservas'  },
   { label: 'Contacto',  href: '#contacto'  },
 ]
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
+  const openPicker = useLocationPicker()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -31,6 +33,20 @@ export function Nav() {
           : 'bg-transparent',
       )}
     >
+      {CAMPAIGN_ACTIVE && (
+        <a
+          href="#reservas"
+          className={cn(
+            'flex items-center justify-center gap-3 sm:gap-4 bg-cream text-carbon font-work-sans text-[9px] sm:text-[10px] uppercase tracking-[0.25em] sm:tracking-[0.3em] overflow-hidden transition-all duration-300',
+            scrolled ? 'h-0' : 'h-10',
+          )}
+        >
+          <span className="font-bold">Nueva sede en Argüelles</span>
+          <span aria-hidden className="block w-px h-3 bg-gray-stone" />
+          <span className="font-medium">Ya abierta</span>
+          <ArrowRight size={14} strokeWidth={1.8} className="hidden sm:block" />
+        </a>
+      )}
       <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <a href="#hero" className="flex items-center gap-3 group">
@@ -55,14 +71,9 @@ export function Nav() {
         </ul>
 
         {/* Desktop CTA */}
-        <a
-          href={BOOKING_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden md:block"
-        >
-          <Button variant="outline" size="sm">Reservar</Button>
-        </a>
+        <Button variant="outline" size="sm" className="hidden md:inline-flex" onClick={openPicker}>
+          Reservar
+        </Button>
 
         {/* Mobile hamburger */}
         <Sheet>
@@ -82,14 +93,9 @@ export function Nav() {
                   </a>
                 </SheetClose>
               ))}
-              <a
-                href={BOOKING_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4"
-              >
-                <Button className="w-full">Reservar cita</Button>
-              </a>
+              <SheetClose asChild>
+                <Button className="w-full mt-4" onClick={openPicker}>Reservar cita</Button>
+              </SheetClose>
             </div>
           </SheetContent>
         </Sheet>
