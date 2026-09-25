@@ -1,14 +1,8 @@
 import { Card, CardContent } from './ui/card'
 import { BorderBeam } from './magicui/border-beam'
+import { LOCATIONS } from '@/lib/brand'
 
-
-const barbers = [
-  { name: 'Sanmil', role: 'Barber', spec: 'Fade & Classic Cut',  initial: 'S' },
-  { name: 'Mateo',   role: 'Barber', spec: 'Barba & Styling',    initial: 'M' },
-  { name: 'Wuill',  role: 'Barber', spec: 'Degradados & Diseño', initial: 'W' },
-]
-
-function BarberCard({ name, role, spec, initial, index }: typeof barbers[0] & { index: number }) {
+function BarberCard({ name, index }: { name: string; index: number }) {
   return (
     <Card
       className="group overflow-hidden"
@@ -18,15 +12,14 @@ function BarberCard({ name, role, spec, initial, index }: typeof barbers[0] & { 
       }}
     >
       {/* Avatar placeholder */}
-      <div className="h-56 bg-carbon flex items-center justify-center relative overflow-hidden">
-        <span className="font-coolvetica font-normal text-6xl text-gray-stone/30 select-none">{initial}</span>
+      <div className="h-40 sm:h-56 bg-carbon flex items-center justify-center relative overflow-hidden">
+        <span className="font-coolvetica font-normal text-6xl text-gray-stone/30 select-none">{name[0]}</span>
         <div className="absolute inset-0 bg-gradient-to-t from-dark2/60 to-transparent" />
       </div>
 
       <CardContent className="pt-5 pb-6">
         <p className="font-coolvetica font-normal text-base text-cream mb-1">{name}</p>
-        <p className="font-work-sans text-[9px] uppercase tracking-[0.3em] text-arena mb-3">{role}</p>
-        <p className="font-work-sans text-xs text-gray-stone">{spec}</p>
+        <p className="font-work-sans text-[9px] uppercase tracking-[0.3em] text-arena">Barber</p>
       </CardContent>
 
       {/* BorderBeam on hover */}
@@ -49,8 +42,20 @@ export function Team() {
           Tu barber
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {barbers.map((b, i) => <BarberCard key={b.name} {...b} index={i} />)}
+        <div className="flex flex-col gap-14">
+          {LOCATIONS.map(l => (
+            <div key={l.id}>
+              <div className="flex items-center gap-3 mb-6">
+                <h3 className="font-coolvetica font-normal text-xl uppercase text-cream">{l.name}</h3>
+                {l.isNew && (
+                  <span className="px-2 py-1 bg-cream text-carbon font-work-sans font-bold text-[8px] uppercase tracking-[0.3em]">Nueva</span>
+                )}
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                {l.barbers.map((name, i) => <BarberCard key={name} name={name} index={i} />)}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

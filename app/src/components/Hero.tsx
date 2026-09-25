@@ -5,7 +5,9 @@ import { Typewriter } from './magicui/typewriter'
 import { ShimmerButton } from './magicui/shimmer-button'
 import { Marquee } from './magicui/marquee'
 import { Card, CardContent } from './ui/card'
-import { BOOKING_URL } from '@/lib/brand'
+import { CAMPAIGN_ACTIVE } from '@/lib/brand'
+import { useLocationPicker } from './LocationPicker'
+import { HeroCampaign } from './HeroCampaign'
 
 const reviews = [
   { name: 'Álvaro Fernández',      text: 'Primera vez que voy a la peluqueria y encantado con el resultado! Sanmil es un crack y todo un profesional, le dije que queria cambiar de look y me aconsejo un poco. Sin duda repetire!', stars: 5 },
@@ -39,6 +41,12 @@ function ReviewCard({ name, text, stars }: typeof reviews[0]) {
 }
 
 export function Hero() {
+  return CAMPAIGN_ACTIVE ? <HeroCampaign /> : <HeroClassic />
+}
+
+function HeroClassic() {
+  const openPicker = useLocationPicker()
+
   return (
     <section
       id="hero"
@@ -72,9 +80,7 @@ export function Hero() {
         </h1>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
-            <ShimmerButton>Reservar cita</ShimmerButton>
-          </a>
+          <ShimmerButton onClick={openPicker}>Reservar cita</ShimmerButton>
           <a
             href="#servicios"
             className="font-work-sans font-medium text-[10px] uppercase tracking-[0.35em] text-arena hover:text-cream transition-colors border-b border-arena/30 pb-0.5 hover:border-cream/50"

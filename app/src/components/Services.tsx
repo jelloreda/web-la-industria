@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardContent } from './ui/card'
-import { BOOKING_URL } from '@/lib/brand'
+import { useLocationPicker } from './LocationPicker'
 
 const services = [
   { name: 'Corte de pelo standard',      price: '16 €',       desc: 'Corte clásico o moderno adaptado a tu estilo.'                                  },
@@ -13,6 +13,8 @@ const services = [
 ]
 
 function ServiceCard({ name, price, desc, index }: typeof services[0] & { index: number }) {
+  const openPicker = useLocationPicker()
+
   return (
     <Card
       className="group hover:border-cream/30 transition-colors duration-500"
@@ -42,14 +44,13 @@ function ServiceCard({ name, price, desc, index }: typeof services[0] & { index:
       </CardHeader>
       <CardContent>
         <p className="font-work-sans text-xs leading-relaxed text-gray-stone mb-4">{desc}</p>
-        <a
-          href={BOOKING_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={openPicker}
           className="inline-block font-work-sans font-medium text-[10px] uppercase tracking-[0.2em] text-cream/70 hover:text-cream border border-cream/20 hover:border-cream/50 px-3 py-1.5 transition-colors duration-300"
         >
           Reservar
-        </a>
+        </button>
       </CardContent>
     </Card>
   )
@@ -72,6 +73,10 @@ export function Services() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {services.map((s, i) => <ServiceCard key={s.name} {...s} index={i} />)}
         </div>
+
+        <p className="mt-8 font-work-sans text-[9px] uppercase tracking-[0.3em] text-arena">
+          Mismos servicios y precios en Guzmán el Bueno y Argüelles
+        </p>
       </div>
     </section>
   )
