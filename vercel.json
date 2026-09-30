@@ -4,7 +4,7 @@
   "installCommand": "npm install",
   "regions": ["cdg1"],
   "redirects": [
-    { "source": "/api/_lib/:path*", "destination": "/", "permanent": false }
+    { "source": "/api/:path*.ts", "destination": "/", "permanent": false }
   ],
   "headers": [
     {

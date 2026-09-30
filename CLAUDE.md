@@ -93,7 +93,7 @@ Sections alternate between `bg-carbon` and `bg-dark2`:
 
 ### Deployment
 
-The Vercel project root is the repo root, so Vercel reads the top-level `vercel.json` (not `app/vercel.json` — there is no such file). It defines the build command (`cd app && npm install && npm run build`), install command (`npm install` at the root, since the `api/` functions need `zod` and `libphonenumber-js` from the root `package.json`), output directory (`.`, where `index.html` lands), a redirect that stops `api/_lib/*` being served as static files, and security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) applied to all routes.
+The Vercel project root is the repo root, so Vercel reads the top-level `vercel.json` (not `app/vercel.json` — there is no such file). It defines the build command (`cd app && npm install && npm run build`), install command (`npm install` at the root, since the `api/` functions need `zod` and `libphonenumber-js` from the root `package.json`), output directory (`.`, where `index.html` lands), a redirect rule that stops any `.ts` source files under `/api/` (handlers and shared code) being served as static files, and security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) applied to all routes.
 
 `app/public/` holds static files served as-is (favicon, OG image, `robots.txt`, `sitemap.xml`) — Vite copies this directory into the build output alongside the generated `index.html`.
 
