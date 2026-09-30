@@ -312,3 +312,15 @@ Precios y duraciones siempre se leen en vivo de Yeasy; la tabla es solo de refer
 | Token de administrador con acceso total a las dos sedes | Solo en el servidor, 3 endpoints acotados, validación estricta y límite de peticiones. |
 | Reservas falsas o masivas | Límite de peticiones, campo trampa y protección contra duplicados. Se revisa tras el lanzamiento; si hay abuso, se añade BotID o verificación por SMS. |
 | Las citas creadas por la cuenta no cuentan como "reserva web" en las estadísticas de Yeasy | Se resuelve en la Tarea 0 (punto 3). |
+
+## 13. Resultados de la Tarea 0 (2026-09-30)
+
+| Pregunta | Resultado |
+|---|---|
+| Crear cliente con `email: ""` | pendiente — sonda de escritura antes de la Task 13 |
+| El cliente creado aparece en `commerceAndCreatedBynewV2` de la sede | pendiente — sonda de escritura antes de la Task 13 |
+| `POST /booking` modo cliente con el token de administrador | pendiente — sonda de escritura antes de la Task 13 |
+| Notificación al cliente | pendiente — sonda de escritura antes de la Task 13 |
+| "Cualquiera" lista varios barbers en un hueco | No |
+| Franjas presentes | morning, afternoon, evening |
+| **Decisión `MODO_CITA`** | `'cliente'` provisional (pendiente de la sonda de escritura) |

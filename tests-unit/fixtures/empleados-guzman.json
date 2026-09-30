@@ -1,0 +1,32 @@
+[
+  {
+    "uuid": "da9e8913-b7e2-4c03-81c6-630890f4be99",
+    "name": "Sanmil",
+    "position": "Barbero",
+    "image": "https://res.cloudinary.com/df0dan3od/image/upload/v1788020444/employees/da9e8913-b7e2-4c03-81c6-630890f4be99/wxd0ydmkjggr4vaaz0hs.jpg"
+  },
+  {
+    "uuid": "2a7189e1-5804-480d-8d8c-44cb256c2c41",
+    "name": "Mateo",
+    "position": "Barbero",
+    "image": "https://res.cloudinary.com/df0dan3od/image/upload/v1788020083/employees/2a7189e1-5804-480d-8d8c-44cb256c2c41/bslbrd33xkbq3t4h6nb2.jpg"
+  },
+  {
+    "uuid": "5edbd80e-37e9-41ae-8c93-abab62be1d18",
+    "name": "Admin",
+    "position": "Admin",
+    "image": ""
+  },
+  {
+    "uuid": "62db04ed-4eea-4b2e-8aff-f1e85a0e7cff",
+    "name": "Carlos",
+    "position": "",
+    "image": "https://res.cloudinary.com/df0dan3od/image/upload/v1788110498/employees/62db04ed-4eea-4b2e-8aff-f1e85a0e7cff/ywmg9umedrqmbz46rrmm.jpg"
+  },
+  {
+    "uuid": "b08264da-ff25-43b1-83bf-c66b8c9670c0",
+    "name": "Wuilliams",
+    "position": "Barbero",
+    "image": "https://res.cloudinary.com/df0dan3od/image/upload/v1788110300/employees/b08264da-ff25-43b1-83bf-c66b8c9670c0/obpp7wnwhpu438d7yfhc.jpg"
+  }
+]
