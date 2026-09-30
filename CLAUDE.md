@@ -20,18 +20,38 @@ npx playwright test           # Run all tests (headless)
 npx playwright test --ui      # Interactive test runner
 ```
 
+Unit tests (server logic + booking client logic) and API type-check run from the root:
+
+```bash
+npm test                 # vitest (tests-unit/)
+npm run typecheck:api    # tsc over api/
+vercel dev               # web + /api functions together on :3000 (Vite dev proxies /api there)
+```
+
 ## Architecture
 
 **La Industria** is a single-page barber shop landing site that builds to a single self-contained `index.html` (no separate assets). The Vite config uses `vite-plugin-singlefile` to inline all assets and outputs to the parent directory.
 
 ### Source layout (`app/src/`)
 
-- `App.tsx` — Composes all 6 section components in order: Nav → Hero → Services → Team → Booking → Contact (photos of each sede live inside its Booking card; there is no separate gallery)
+- `App.tsx` — Composes Nav → Hero → Team → Booking → Contact inside `BookingProvider`. There is no Services section: services and prices live inside the booking flow.
 - `components/` — One file per section, plus `magicui/` (Particles, Typewriter, ShimmerButton, BorderBeam, Marquee) and `ui/` (shadcn Card, Button, Badge, Sheet)
 - `lib/brand.ts` — Single source of truth for brand data. `LOCATIONS` holds both sedes (Guzmán el Bueno, Argüelles), each with its own Yeasy booking URL, address, phone/WhatsApp, hours, map links and barbers. `CAMPAIGN_ACTIVE` toggles the temporary "dos sedes" hero campaign (planned until end of October 2026).
-- `components/LocationPicker.tsx` — Context + dialog ("Elige tu sede"). Any generic "Reservar" CTA (nav, hero, services) calls `useLocationPicker()` to open it; location-specific CTAs (Booking cards, Contact tabs) link straight to that sede's Yeasy URL.
+- `components/booking/` — In-site booking flow (Radix Dialog panel: sede → servicio → día/barber/hora → datos → confirmación). Any "Reservar" CTA calls `useBooking().open(sedeId?)`. State in `estado.ts` (reducer); API calls in `lib/booking-api.ts`. `BOOKING_MODE` in `lib/brand.ts` switches back to plain Yeasy links (`'yeasy'`) as a kill switch.
 - `components/HeroCampaign.tsx` — Campaign hero shown instead of the classic hero while `CAMPAIGN_ACTIVE` is true; the Nav also shows a cream announcement bar then.
 - `lib/utils.ts` — `cn()` helper (clsx + tailwind-merge)
+
+### Booking API (`api/`, repo root)
+
+Vercel Functions, the only door to `api.yeasy.io`. `api/_lib/` is shared code (not routed).
+
+| Endpoint | Does |
+|---|---|
+| `GET /api/reservas/servicios?sede=` | Public services before the "Extras" separator, clean names (map in `_lib/servicios.ts`) |
+| `GET /api/reservas/huecos?sede=&servicio=&fecha=` | Slots for one day via `POST /availability` (never `/availability/v2`, which jumps to the next open day). Only barbers with slots that day, no admin staff |
+| `POST /api/reservas` | Validates, re-checks the slot, finds the customer by phone (digits only) or creates it, avoids duplicates, creates the booking |
+
+Env vars (Vercel, Preview + Production): `YEASY_API_TOKEN` (admin JWT, ~700 days — renewal steps in `contabilidad-la-industria/yeasy-mcp-server/README.md`). Customers are created with the sede's commerce uuid as creator (`createdBy`) and a random password nobody knows (Yeasy requires a non-empty one; customers use "olvidé mi contraseña" in the Yeasy app). `scripts/yeasy-sonda.mjs` re-checks the Yeasy contracts.
 
 ### Styling
 
@@ -57,7 +77,7 @@ Path alias `@/` maps to `app/src/`.
 
 ### Testing
 
-Playwright tests in `tests/la-industria.spec.ts` cover: no console errors, hero visibility, per-sede booking URLs, the location picker, Contact tabs, Services section background, and desktop/mobile screenshots. CI runs on GitHub Actions (`push` to main and PRs).
+Playwright tests in `tests/` run against the built `index.html` served on `127.0.0.1:4173` (python http.server) with `/api/reservas/*` mocked (`tests/mocks/reservas.ts`); they cover the page and the full booking flow. Vitest covers `api/_lib` and the booking client logic. Rebuild `index.html` before the e2e (`cd app && npm run build`). CI runs on GitHub Actions (`push` to main and PRs).
 
 ### Section background colors
 
@@ -65,8 +85,7 @@ Sections alternate between `bg-carbon` and `bg-dark2`:
 
 | Section | Background |
 |---------|-----------|
-| Hero | `dark2` |
-| Services | `carbon` |
+| Hero | `carbon` |
 | Team | `dark2` |
 | Booking | `carbon` |
 | Contact | `dark2` |
@@ -74,9 +93,13 @@ Sections alternate between `bg-carbon` and `bg-dark2`:
 
 ### Deployment
 
-The Vercel project root is the repo root, so Vercel reads the top-level `vercel.json` (not `app/vercel.json` — there is no such file). It defines the build command (`cd app && npm install && npm run build`), output directory (`.`, where `index.html` lands), and security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) applied to all routes.
+The Vercel project root is the repo root, so Vercel reads the top-level `vercel.json` (not `app/vercel.json` — there is no such file). It defines the build command (`cd app && npm install && npm run build`), install command (`npm install` at the root, since the `api/` functions need `zod` and `libphonenumber-js` from the root `package.json`), output directory (`.`, where `index.html` lands), a redirect rule that stops any `.ts` source files under `/api/` (handlers and shared code) being served as static files, and security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) applied to all routes.
 
 `app/public/` holds static files served as-is (favicon, OG image, `robots.txt`, `sitemap.xml`) — Vite copies this directory into the build output alongside the generated `index.html`.
+
+`.vercelignore` (repo root) keeps non-runtime files out of the deployment, because the output directory is the repo root and anything deployed would be served as a static file: `docs/`, `scripts/`, `tests/`, `tests-unit/`, `.superpowers/`, `screenshots/`, `playwright-report/`, `test-results/`, `.claude/`, `*.md`, `playwright.config.ts`, `vitest.config.mts`. `app/`, `api/`, `package.json`, `package-lock.json`, `tsconfig.json` and `vercel.json` must stay (the build and functions need them). `vercel.json` pins functions to `regions: ["cdg1"]` (near Yeasy/Madrid).
+
+Rollback of the in-site booking: `BOOKING_MODE = 'yeasy'` in `app/src/lib/brand.ts` only changes the UI (links back to Yeasy). A full rollback also means removing `YEASY_API_TOKEN` in Vercel so `/api/reservas` answers 503.
 
 ### Design spec
 

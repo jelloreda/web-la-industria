@@ -6,7 +6,7 @@ import { ShimmerButton } from './magicui/shimmer-button'
 import { Marquee } from './magicui/marquee'
 import { Card, CardContent } from './ui/card'
 import { CAMPAIGN_ACTIVE } from '@/lib/brand'
-import { useLocationPicker } from './LocationPicker'
+import { useBooking } from './booking/BookingProvider'
 import { HeroCampaign } from './HeroCampaign'
 
 const reviews = [
@@ -45,12 +45,12 @@ export function Hero() {
 }
 
 function HeroClassic() {
-  const openPicker = useLocationPicker()
+  const { open } = useBooking()
 
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col bg-dark2 overflow-hidden"
+      className="relative min-h-screen flex flex-col bg-carbon overflow-hidden"
     >
       <Particles quantity={70} color="#7F7F7D" />
 
@@ -80,12 +80,12 @@ function HeroClassic() {
         </h1>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <ShimmerButton onClick={openPicker}>Reservar cita</ShimmerButton>
+          <ShimmerButton onClick={() => open()}>Reservar cita</ShimmerButton>
           <a
-            href="#servicios"
+            href="#reservas"
             className="font-work-sans font-medium text-[10px] uppercase tracking-[0.35em] text-arena hover:text-cream transition-colors border-b border-arena/30 pb-0.5 hover:border-cream/50"
           >
-            Ver servicios
+            Ver sedes
           </a>
         </div>
       </div>

@@ -8,6 +8,11 @@ export default defineConfig({
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
   },
+  server: {
+    proxy: { '/api': 'http://localhost:3000' },
+    // La web importa api/_lib/fecha.ts y api/_lib/tipos.ts, que están fuera de app/.
+    fs: { allow: ['..'] },
+  },
   build: {
     outDir: '../',
     emptyOutDir: false,

@@ -1,7 +1,11 @@
 {
   "buildCommand": "cd app && npm install && npm run build",
   "outputDirectory": ".",
-  "installCommand": "echo 'dependencies installed in buildCommand'",
+  "installCommand": "npm install",
+  "regions": ["cdg1"],
+  "redirects": [
+    { "source": "/api/:path*.ts", "destination": "/", "permanent": false }
+  ],
   "headers": [
     {
       "source": "/(.*)",

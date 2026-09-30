@@ -1,0 +1,12 @@
+docs/
+scripts/
+tests/
+tests-unit/
+.superpowers/
+screenshots/
+playwright-report/
+test-results/
+.claude/
+*.md
+playwright.config.ts
+vitest.config.mts

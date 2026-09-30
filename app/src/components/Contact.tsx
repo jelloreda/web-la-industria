@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { MapPin, Clock, Phone, Instagram as InstagramIcon, MessageCircle, ExternalLink } from 'lucide-react'
 import { ShimmerButton } from './magicui/shimmer-button'
+import { useBooking } from './booking/BookingProvider'
 import { LogoMark } from './LogoMark'
 import { cn } from '@/lib/utils'
 import { INSTAGRAM, IG_URL, LOCATIONS } from '@/lib/brand'
 
 export function Contact() {
+  const { open } = useBooking()
   const [active, setActive] = useState(0)
   const loc = LOCATIONS[active]
 
@@ -121,9 +123,7 @@ export function Contact() {
               </div>
 
               <div className="flex flex-wrap items-center gap-6 mt-6">
-                <a href={loc.bookingUrl} target="_blank" rel="noopener noreferrer">
-                  <ShimmerButton>Reservar aquí</ShimmerButton>
-                </a>
+                <ShimmerButton onClick={() => open(loc.id)}>Reservar aquí</ShimmerButton>
                 <a
                   href={loc.mapsUrl}
                   target="_blank"

@@ -5,10 +5,9 @@ import { Button } from './ui/button'
 import { Sheet, SheetTrigger, SheetContent, SheetClose, SheetTitle } from './ui/sheet'
 import { cn } from '@/lib/utils'
 import { CAMPAIGN_ACTIVE } from '@/lib/brand'
-import { useLocationPicker } from './LocationPicker'
+import { useBooking } from './booking/BookingProvider'
 
 const links = [
-  { label: 'Servicios', href: '#servicios' },
   { label: 'Equipo',    href: '#equipo'    },
   { label: 'Sedes',     href: '#reservas'  },
   { label: 'Contacto',  href: '#contacto'  },
@@ -16,7 +15,7 @@ const links = [
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
-  const openPicker = useLocationPicker()
+  const { open } = useBooking()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -71,7 +70,7 @@ export function Nav() {
         </ul>
 
         {/* Desktop CTA */}
-        <Button variant="outline" size="sm" className="hidden md:inline-flex" onClick={openPicker}>
+        <Button variant="outline" size="sm" className="hidden md:inline-flex" onClick={() => open()}>
           Reservar
         </Button>
 
@@ -94,7 +93,7 @@ export function Nav() {
                 </SheetClose>
               ))}
               <SheetClose asChild>
-                <Button className="w-full mt-4" onClick={openPicker}>Reservar cita</Button>
+                <Button className="w-full mt-4" onClick={() => open()}>Reservar cita</Button>
               </SheetClose>
             </div>
           </SheetContent>
