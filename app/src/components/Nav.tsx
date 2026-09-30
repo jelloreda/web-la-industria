@@ -8,7 +8,6 @@ import { CAMPAIGN_ACTIVE } from '@/lib/brand'
 import { useBooking } from './booking/BookingProvider'
 
 const links = [
-  { label: 'Servicios', href: '#servicios' },
   { label: 'Equipo',    href: '#equipo'    },
   { label: 'Sedes',     href: '#reservas'  },
   { label: 'Contacto',  href: '#contacto'  },

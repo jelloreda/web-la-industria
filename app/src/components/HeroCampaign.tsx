@@ -14,7 +14,7 @@ export function HeroCampaign() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col bg-dark2 overflow-hidden pt-[104px]"
+      className="relative min-h-screen flex flex-col bg-carbon overflow-hidden pt-[104px]"
     >
       <Particles quantity={50} color="#7F7F7D" />
 
@@ -70,7 +70,7 @@ export function HeroCampaign() {
                 'group flex flex-col gap-4 lg:gap-5 p-5 lg:p-9 border transition-colors',
                 l.isNew
                   ? 'bg-cream text-carbon border-cream hover:bg-cream-bg'
-                  : 'bg-carbon text-cream border-cream/10 hover:border-cream/40',
+                  : 'bg-dark2 text-cream border-cream/10 hover:border-cream/40',
               )}
             >
               <span className="flex">

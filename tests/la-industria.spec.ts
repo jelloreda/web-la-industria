@@ -31,14 +31,16 @@ test.describe('La Industria Landing Page', () => {
     await expect(contact).toContainText('Calle de Altamirano 3')
   })
 
-  test('services section has carbon background', async ({ page }) => {
-    const section = page.locator('#servicios')
-    await expect(section).toBeVisible()
-    const bg = await section.evaluate(el =>
-      getComputedStyle(el).backgroundColor
-    )
-    // #414040 = rgb(65, 64, 64)
-    expect(bg).toContain('65, 64, 64')
+  test('services section is gone and nothing links to it', async ({ page }) => {
+    await expect(page.locator('#servicios')).toHaveCount(0)
+    await expect(page.locator('a[href="#servicios"]')).toHaveCount(0)
+  })
+
+  test('hero has carbon background so it contrasts with the team section', async ({ page }) => {
+    const hero = await page.locator('#hero').evaluate(el => getComputedStyle(el).backgroundColor)
+    const equipo = await page.locator('#equipo').evaluate(el => getComputedStyle(el).backgroundColor)
+    expect(hero).toContain('65, 64, 64') // #414040
+    expect(equipo).toContain('51, 50, 49') // #333231
   })
 
   test('desktop screenshot at 1280px', async ({ page }) => {
