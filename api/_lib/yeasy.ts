@@ -59,5 +59,10 @@ export async function yeasy<T>(ruta: string, { method = 'GET', body, auth = fals
     console.error('[yeasy] respuesta', res.status, method, url.pathname)
     throw new ErrorReserva('AGENDA_NO_DISPONIBLE', 503)
   }
-  return (await res.json()) as T
+  try {
+    return (await res.json()) as T
+  } catch {
+    console.error('[yeasy] cuerpo no JSON', method, url.pathname)
+    throw new ErrorReserva('AGENDA_NO_DISPONIBLE', 503)
+  }
 }

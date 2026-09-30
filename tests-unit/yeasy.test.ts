@@ -40,6 +40,11 @@ describe('yeasy', () => {
     await expect(yeasy('/x', { auth: true })).rejects.toMatchObject({ codigo: 'AGENDA_NO_DISPONIBLE' })
     expect(llamadas).toHaveLength(0)
   })
+
+  it('convierte respuesta 200 con cuerpo inválido en AGENDA_NO_DISPONIBLE', async () => {
+    fetchFalso({ 'GET /malformado': () => new Response('<html>', { status: 200 }) })
+    await expect(yeasy('/malformado')).rejects.toMatchObject({ codigo: 'AGENDA_NO_DISPONIBLE', status: 503 })
+  })
 })
 
 describe('sedes', () => {
