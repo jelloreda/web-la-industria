@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 export const TEXTO_ERROR_CARGA = 'No hemos podido cargar la agenda. Inténtalo de nuevo en unos minutos o escríbenos por WhatsApp.'
@@ -21,18 +21,21 @@ export function Pie({ nota, children }: { nota?: string; children: ReactNode }) 
   )
 }
 
-export function BotonPrincipal({ className, type = 'button', ...props }: ButtonHTMLAttributes<HTMLButtonElement>) {
-  return (
-    <button
-      type={type}
-      {...props}
-      className={cn(
-        'min-h-[52px] w-full bg-cream text-carbon hover:bg-cream-bg font-work-sans font-bold text-[13px] uppercase tracking-[0.25em] transition-colors disabled:opacity-45 disabled:cursor-not-allowed',
-        className,
-      )}
-    />
-  )
-}
+export const BotonPrincipal = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement>>(
+  function BotonPrincipal({ className, type = 'button', ...props }, ref) {
+    return (
+      <button
+        ref={ref}
+        type={type}
+        {...props}
+        className={cn(
+          'min-h-[52px] w-full bg-cream text-carbon hover:bg-cream-bg font-work-sans font-bold text-[13px] uppercase tracking-[0.25em] transition-colors disabled:opacity-45 disabled:cursor-not-allowed',
+          className,
+        )}
+      />
+    )
+  },
+)
 
 export function Esqueleto({ className }: { className?: string }) {
   return <div aria-hidden className={cn('bg-dark2 animate-pulse', className)} />
