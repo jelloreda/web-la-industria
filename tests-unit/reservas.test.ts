@@ -81,9 +81,9 @@ describe('crearReserva', () => {
     expect(llamadas.find(l => l.ruta === '/availability/employee')!.cuerpo).toMatchObject({ employee: CARLOS })
   })
 
-  it('cliente bloqueado → NO_DISPONIBLE y no se crea nada', async () => {
+  it('cliente bloqueado → AGENDA_NO_DISPONIBLE (indistinguible) y no se crea nada', async () => {
     const llamadas = rutas()
-    await expect(crearReserva(datos({ telefono: '699999999' }), AHORA)).rejects.toMatchObject({ codigo: 'NO_DISPONIBLE', status: 409 })
+    await expect(crearReserva(datos({ telefono: '699999999' }), AHORA)).rejects.toMatchObject({ codigo: 'AGENDA_NO_DISPONIBLE', status: 503 })
     expect(llamadas.some(l => l.metodo === 'POST' && l.ruta.startsWith('/booking'))).toBe(false)
   })
 
@@ -114,6 +114,26 @@ describe('crearReserva', () => {
     expect(llamadas.some(l => l.metodo === 'POST' && (l.ruta === '/booking' || l.ruta === '/booking/commerce'))).toBe(false)
   })
 
+  it('/booking/limit con respuesta inesperada → HUECO_OCUPADO (falla cerrado)', async () => {
+    rutas({ 'POST /booking/limit': () => ({}) })
+    await expect(crearReserva(datos(), AHORA)).rejects.toMatchObject({ codigo: 'HUECO_OCUPADO' })
+  })
+
+  it('conflicto en /booking/limit con teléfono nuevo no crea el cliente', async () => {
+    const llamadas = rutas({ 'POST /booking/limit': () => [{ uuid: 'otra' }] })
+    await expect(crearReserva(datos({ telefono: '611111111' }), AHORA)).rejects.toMatchObject({ codigo: 'HUECO_OCUPADO' })
+    expect(llamadas.some(l => l.ruta === '/customer/commerce')).toBe(false)
+  })
+
+  it('una cita previa cancelada no cuenta como duplicado', async () => {
+    const llamadas = rutas({
+      'GET /booking/findBookingsByCommerce/.+': () => [{ uuid: 'ya', startsDay: '2026-10-01', startsHour: 17, startsMinute: 30, isDeleted: false, status: 'Cancelada', asignedTo: { name: 'Carlos' } }],
+    })
+    const cita = await crearReserva(datos(), AHORA)
+    expect(cita.barbero).toBe('Wuilliams')
+    expect(llamadas.some(l => l.metodo === 'POST' && l.ruta === '/booking')).toBe(true)
+  })
+
   it('token caducado al crear la cita → AGENDA_NO_DISPONIBLE', async () => {
     rutas({ 'POST /booking': () => new Response('', { status: 401 }), 'POST /booking/commerce': () => new Response('', { status: 401 }) })
     await expect(crearReserva(datos(), AHORA)).rejects.toMatchObject({ codigo: 'AGENDA_NO_DISPONIBLE', status: 503 })
@@ -136,6 +156,13 @@ describe('POST /api/reservas', () => {
     const r = await POST(req(peticion()))
     expect(r.status).toBe(201)
     expect((await r.json()).cita.hora).toBe('17:30')
+  })
+
+  it('campo trampa relleno → 201 sin llamar a Yeasy', async () => {
+    const llamadas = fetchFalso({})
+    const r = await POST(req(peticion({ website: 'http://spam' })))
+    expect(r.status).toBe(201)
+    expect(llamadas).toHaveLength(0)
   })
 
   it('JSON roto → 422', async () => {

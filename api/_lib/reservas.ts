@@ -62,10 +62,12 @@ function aCita(d: DatosReserva, servicio: YServicio, barbero: string): CitaConfi
   }
 }
 
+const CITA_ANULADA = /cancel|anul|no.?show|rechaz/i
+
 async function citaPrevia(commerceUuid: string, clienteUuid: string, fecha: string, hour: number, minute: number): Promise<YCita | null> {
   const citas = await yeasy<YCita[]>(`/booking/findBookingsByCommerce/${commerceUuid}/customer/${clienteUuid}`, { auth: true })
   return (Array.isArray(citas) ? citas : [])
-    .find(c => !c.isDeleted && c.startsDay === fecha && c.startsHour === hour && c.startsMinute === minute) ?? null
+    .find(c => !c.isDeleted && !CITA_ANULADA.test(c.status ?? '') && c.startsDay === fecha && c.startsHour === hour && c.startsMinute === minute) ?? null
 }
 
 function cuerpoCitaCliente(d: DatosReserva, servicio: YServicio, cliente: YCliente, barberoId: string, hour: number, minute: number) {
@@ -95,7 +97,7 @@ export async function crearReserva(d: DatosReserva, ahora: Date): Promise<CitaCo
   const servicio = await buscarServicio(commerce, d.servicioId)
 
   const existente = await buscarClientePorTelefono(commerce, d.telefono)
-  if (existente?.isBlocked) throw new ErrorReserva('NO_DISPONIBLE', 409)
+  if (existente?.isBlocked) throw new ErrorReserva('AGENDA_NO_DISPONIBLE', 503)
   if (existente) {
     const previa = await citaPrevia(commerce, existente.uuid, d.fecha, hour, minute)
     if (previa) return aCita(d, servicio, previa.asignedTo?.name?.trim() ?? '')
@@ -115,7 +117,7 @@ export async function crearReserva(d: DatosReserva, ahora: Date): Promise<CitaCo
     method: 'POST', auth: true,
     body: { duration: servicio.defaultDuration, hour, minute, date: d.fecha, employee: { uuid: barberoId }, commerce: { uuid: commerce } },
   })
-  if (libre !== true || (Array.isArray(conflictos) && conflictos.length > 0)) throw new ErrorReserva('HUECO_OCUPADO', 409)
+  if (libre !== true || !Array.isArray(conflictos) || conflictos.length > 0) throw new ErrorReserva('HUECO_OCUPADO', 409)
 
   const cliente = existente ?? await crearCliente(d.sede, d.nombre, d.telefono)
 

@@ -20,7 +20,7 @@ export interface YCliente {
 }
 export interface YCita {
   uuid: string; startsDay: string; startsHour: number; startsMinute: number
-  isDeleted?: boolean; asignedTo?: { name?: string } | null
+  isDeleted?: boolean; status?: string; asignedTo?: { name?: string } | null
 }
 
 interface Opciones {
