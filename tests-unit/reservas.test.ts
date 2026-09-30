@@ -33,7 +33,6 @@ const peticion = (cambios: Record<string, unknown> = {}) => ({
 
 beforeEach(() => {
   vi.stubEnv('YEASY_API_TOKEN', 't')
-  vi.stubEnv('YEASY_USER_UUID_GUZMAN', 'u-g')
   vi.spyOn(console, 'error').mockImplementation(() => {})
   vi.spyOn(console, 'info').mockImplementation(() => {})
 })

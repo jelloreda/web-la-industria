@@ -3496,18 +3496,16 @@ Toca servicios externos: **cada paso de este bloque se confirma con Jaime en el 
 
 - [ ] **Step 1: Variables de entorno en Vercel (Preview y Production)**
 
-Tras confirmarlo con Jaime, carga las tres variables desde el `.env` del MCP **sin imprimir sus valores**:
+Tras confirmarlo con Jaime, carga la variable desde el `.env` del MCP **sin imprimir sus valores**:
 
 ```bash
 ENV=../contabilidad-la-industria/yeasy-mcp-server/.env
 for destino in preview production; do
   grep '^YEASY_API_TOKEN=' "$ENV" | cut -d= -f2- | tr -d '\n' | vercel env add YEASY_API_TOKEN "$destino" --sensitive
-  grep '^YEASY_LOCATION_1_USER_UUID=' "$ENV" | cut -d= -f2- | tr -d '\n' | vercel env add YEASY_USER_UUID_GUZMAN "$destino"
-  grep '^YEASY_LOCATION_2_USER_UUID=' "$ENV" | cut -d= -f2- | tr -d '\n' | vercel env add YEASY_USER_UUID_ARGUELLES "$destino"
 done
 ```
 
-Comprueba con `vercel env ls` que las tres aparecen en Preview y Production.
+Comprueba con `vercel env ls` que aparece en Preview y Production.
 
 - [ ] **Step 2: Límite de peticiones en el Vercel Firewall**
 

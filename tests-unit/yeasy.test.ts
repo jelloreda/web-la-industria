@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { yeasy } from '../api/_lib/yeasy'
-import { sedePorId, userUuid } from '../api/_lib/sedes'
+import { sedePorId } from '../api/_lib/sedes'
 import { ErrorReserva } from '../api/_lib/errores'
 import { fetchFalso } from './helpers/fetch-falso'
 
@@ -54,12 +54,5 @@ describe('sedes', () => {
     expect(sedePorId('otra')).toBeNull()
     expect(sedePorId(null)).toBeNull()
     expect(sedePorId('toString')).toBeNull()
-  })
-
-  it('lee el usuario creador de su variable de entorno', () => {
-    vi.stubEnv('YEASY_USER_UUID_ARGUELLES', 'u-a')
-    expect(userUuid(sedePorId('arguelles')!)).toBe('u-a')
-    vi.stubEnv('YEASY_USER_UUID_ARGUELLES', '')
-    expect(() => userUuid(sedePorId('arguelles')!)).toThrow(ErrorReserva)
   })
 })

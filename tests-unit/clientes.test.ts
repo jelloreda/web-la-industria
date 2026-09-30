@@ -13,7 +13,6 @@ const CLIENTES = [
 describe('clientes', () => {
   beforeEach(() => {
     vi.stubEnv('YEASY_API_TOKEN', 't')
-    vi.stubEnv('YEASY_USER_UUID_GUZMAN', 'u-g')
   })
 
   it('encuentra por cifras e ignora borrados, con token', async () => {
@@ -24,13 +23,21 @@ describe('clientes', () => {
     expect(llamadas[0].headers.Authorization).toBe('Bearer t')
   })
 
-  it('crea el cliente sin email, con nombre separado y el usuario de la sede', async () => {
+  it('crea el cliente sin email, con nombre separado, el comercio como creador y contraseña aleatoria', async () => {
     const llamadas = fetchFalso({ 'POST /customer/commerce': (_u, cuerpo) => ({ uuid: 'nuevo', ...(cuerpo as object) }) })
     const c = await crearCliente(sedePorId('guzman-el-bueno')!, 'Álvaro Martín López', '+34611111111')
     expect(c.uuid).toBe('nuevo')
     expect(llamadas[0].cuerpo).toEqual({
       name: 'Álvaro', lastname: 'Martín López', email: '', phone: '+34611111111',
-      password: '', createdBy: 'u-g', createdByCommerce: true,
+      password: expect.stringMatching(/^[A-Za-z0-9_-]{20,}$/), createdBy: COMMERCE_G, createdByCommerce: true,
     })
+  })
+
+  it('genera una contraseña distinta en cada llamada', async () => {
+    const llamadas = fetchFalso({ 'POST /customer/commerce': (_u, cuerpo) => ({ uuid: 'nuevo', ...(cuerpo as object) }) })
+    await crearCliente(sedePorId('guzman-el-bueno')!, 'Álvaro Martín López', '+34611111111')
+    await crearCliente(sedePorId('guzman-el-bueno')!, 'Álvaro Martín López', '+34611111111')
+    const [a, b] = llamadas.map(l => (l.cuerpo as { password: string }).password)
+    expect(a).not.toBe(b)
   })
 })

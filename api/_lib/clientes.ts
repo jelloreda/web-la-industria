@@ -1,5 +1,6 @@
+import { randomBytes } from 'node:crypto'
 import { separarNombre } from './nombres'
-import { userUuid, type SedeYeasy } from './sedes'
+import type { SedeYeasy } from './sedes'
 import { mismoTelefono } from './telefono'
 import { yeasy, type YCliente } from './yeasy'
 
@@ -13,6 +14,10 @@ export function crearCliente(sede: SedeYeasy, nombre: string, e164: string): Pro
   return yeasy<YCliente>('/customer/commerce', {
     method: 'POST',
     auth: true,
-    body: { name, lastname, email: '', phone: e164, password: '', createdBy: userUuid(sede), createdByCommerce: true },
+    body: {
+      name, lastname, email: '', phone: e164,
+      password: randomBytes(18).toString('base64url'),
+      createdBy: sede.commerceUuid, createdByCommerce: true,
+    },
   })
 }

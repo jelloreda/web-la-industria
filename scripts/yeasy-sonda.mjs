@@ -5,6 +5,7 @@
 // Lee YEASY_API_TOKEN y YEASY_LOCATION_1_USER_UUID del .env del MCP sin imprimirlos.
 import fs from 'node:fs'
 import path from 'node:path'
+import { randomBytes } from 'node:crypto'
 
 const ENV_MCP = path.resolve(process.cwd(), '../contabilidad-la-industria/yeasy-mcp-server/.env')
 const env = Object.fromEntries(
@@ -50,9 +51,8 @@ async function escritura() {
   if (!process.argv.includes('--confirmo')) throw new Error('Falta --confirmo')
   const tel = process.env.SONDA_TELEFONO
   if (!/^\+\d{9,14}$/.test(tel ?? '')) throw new Error('SONDA_TELEFONO en formato +34XXXXXXXXX')
-  const user = env.YEASY_LOCATION_1_USER_UUID
 
-  const nuevo = await y('/customer/commerce', { method: 'POST', auth: true, body: { name: 'Prueba', lastname: 'Web Reservas', email: '', phone: tel, password: '', createdBy: user, createdByCommerce: true } })
+  const nuevo = await y('/customer/commerce', { method: 'POST', auth: true, body: { name: 'Prueba', lastname: 'Web Reservas', email: '', phone: tel, password: randomBytes(18).toString('base64url'), createdBy: G, createdByCommerce: true } })
   console.log('1) crear cliente con email vacío →', nuevo.status, nuevo.datos?.uuid ? 'uuid ok' : nuevo.datos)
   const cliente = nuevo.datos
   const lista = await y(`/customer/commerceAndCreatedBynewV2/${G}`, { auth: true })

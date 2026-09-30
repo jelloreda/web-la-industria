@@ -67,7 +67,7 @@ Base: `yeasy-mcp-server` en `contabilidad-la-industria/` (código probado en pro
 | `POST /booking/limit` | Segundo chequeo de solapamientos. Devuelve `[]` si no hay conflicto. |
 | `POST /customer/commerce/get-existing-customer` | Buscar cliente por teléfono (y email). |
 | `GET /customer/commerceAndCreatedBynewV2/<commerce>` | Lista de clientes de la sede (~1.600–1.800), con `phone` e `isBlocked`. Alternativa de búsqueda. |
-| `POST /customer/commerce` | Crear cliente `{ name, lastname, email, phone, password: "", createdBy, createdByCommerce: true }`. |
+| `POST /customer/commerce` | Crear cliente `{ name, lastname, email, phone, password, createdBy, createdByCommerce: true }`, con `email: ""`, `password` aleatoria no vacía y `createdBy` = UUID del comercio (con un UUID de empleado da 403). |
 | `POST /booking/commerce` o `POST /booking` | Crear la cita (ver Tarea 0). La web de Yeasy usa `POST /booking` con `createdByType: "customer"` y `createdUUID: <cliente>`; el MCP usa `/booking/commerce` con `createdByType: "employee"`. |
 | `POST /push-notification/create-booking` | Avisar al barber (el MCP lo hace tras crear). |
 
@@ -143,7 +143,7 @@ Errores: 422 `DATOS_INVALIDOS` (con `campos`), 409 `HUECO_OCUPADO`, 409 `NO_DISP
 | Archivo | Responsabilidad |
 |---|---|
 | `yeasy.ts` | Cliente HTTP: base URL, `x-app-version`, token, timeout, traducción de errores a los códigos de §5.1. |
-| `sedes.ts` | Mapa `sede id → { commerceUuid, userUuid }`. Los UUID de comercio no son secretos. El `userUuid` (quién crea al cliente) sale del `.env` del MCP y va como variable de entorno. |
+| `sedes.ts` | Mapa `sede id → { id, commerceUuid }`. Los UUID de comercio no son secretos; el comercio es también el `createdBy` al crear clientes. |
 | `servicios.ts` | Filtro por separador, orden y mapa de nombres limpios. |
 | `huecos.ts` | Mapea la respuesta de `/availability` a la forma de §5.1. Filtra personal. Construye la URL de foto de Cloudinary (`c_fill,g_face,w_200,h_200`). |
 | `clientes.ts` | Buscar por cifras del teléfono y crear. Normaliza nombre y teléfono. |
@@ -272,7 +272,6 @@ Precios y duraciones siempre se leen en vivo de Yeasy; la tabla es solo de refer
 
 - Variables de entorno en Vercel (Preview y Production):
   - `YEASY_API_TOKEN`: token de la cuenta, el mismo que usa el MCP.
-  - `YEASY_USER_UUID_GUZMAN` y `YEASY_USER_UUID_ARGUELLES`: el empleado con el que se crean los clientes, sacado del `.env` del MCP.
 - Interruptor `BOOKING_MODE: 'integrada' | 'yeasy'` en `brand.ts`. Con `'yeasy'`, `open(sedeId)` abre el `bookingUrl` de la sede como hoy. Sirve para volver atrás con un commit de una línea si algo va mal en producción, sin revertir la funcionalidad.
 - **Desarrollo local:** `vercel dev` sirve la web y las funciones juntas. `npm run dev` (Vite) sigue funcionando para la UI con un proxy de `/api` hacia `vercel dev`.
 - **Despliegue:**
@@ -317,15 +316,15 @@ Precios y duraciones siempre se leen en vivo de Yeasy; la tabla es solo de refer
 
 | Pregunta | Resultado |
 |---|---|
-| Crear cliente con `email: ""` | pendiente — sonda de escritura antes de la Task 13 |
-| El cliente creado aparece en `commerceAndCreatedBynewV2` de la sede | pendiente — sonda de escritura antes de la Task 13 |
-| `POST /booking` modo cliente con el token de administrador | pendiente — sonda de escritura antes de la Task 13 |
-| Notificación al cliente | pendiente — sonda de escritura antes de la Task 13 |
-| Formato de `startsDay` / `startsHour` (tipo y valor al leerlos) | pendiente — sonda de escritura |
-| Textos de `status` de una cita recién creada | pendiente — sonda de escritura |
-| `week` / `year` guardados frente a los que calculamos | pendiente — sonda de escritura |
-| La cita Pendiente bloquea el hueco (`/availability/employee`, `/booking/limit`, `/availability`) | pendiente — sonda de escritura |
-| Notificación al barber (app) | pendiente — sonda de escritura |
+| Crear cliente con `email: ""` | Sí (201), pero exige `createdBy` = UUID del **comercio** (con el de un empleado, 403 "No tienes acceso a este comercio") y `password` no vacía (con `''`, 400 "Password requerido"). Se envía una contraseña aleatoria que nadie conoce; el cliente puede usar "olvidé mi contraseña" en la app de Yeasy |
+| El cliente creado aparece en `commerceAndCreatedBynewV2` de la sede | Sí |
+| `POST /booking` modo cliente con el token de administrador | 201; se guarda con `createdByType: customer`, `source: web` y `status: Pendiente` |
+| Notificación al cliente | El cliente no recibe SMS ni WhatsApp |
+| Formato de `startsDay` / `startsHour` (tipo y valor al leerlos) | `startsDay` es un string `YYYY-MM-DD`; `startsHour` y `startsMinute` son números |
+| Textos de `status` de una cita recién creada | "Pendiente" (los textos de cancelación siguen sin observarse) |
+| `week` / `year` guardados frente a los que calculamos | Coinciden con los que calculamos |
+| La cita Pendiente bloquea el hueco (`/availability/employee`, `/booking/limit`, `/availability`) | Sí: `availability/employee` pasa a false, `booking/limit` a 1 y el hueco deja de ofrecerse |
+| Notificación al barber (app) | Yeasy avisa al barber por sí mismo; no hace falta llamar a ningún push |
 | "Cualquiera" lista varios barbers en un hueco | No |
 | Franjas presentes | morning, afternoon, evening |
-| **Decisión `MODO_CITA`** | `'cliente'` provisional (pendiente de la sonda de escritura) |
+| **Decisión `MODO_CITA`** | `'cliente'`, confirmado |
