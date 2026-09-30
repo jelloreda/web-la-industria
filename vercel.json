@@ -2,6 +2,7 @@
   "buildCommand": "cd app && npm install && npm run build",
   "outputDirectory": ".",
   "installCommand": "npm install",
+  "regions": ["cdg1"],
   "redirects": [
     { "source": "/api/_lib/:path*", "destination": "/", "permanent": false }
   ],

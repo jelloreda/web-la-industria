@@ -24,7 +24,7 @@ export async function GET(request: Request): Promise<Response> {
       disponibilidad(sede.commerceUuid, fecha, servicio),
       empleadosDeSede(sede.commerceUuid),
     ])
-    return json(aHuecosPublicos(fecha, disp, empleados, ahora), 200, 'public, s-maxage=20, stale-while-revalidate=40')
+    return json(aHuecosPublicos(fecha, disp, empleados, ahora), 200, 'public, s-maxage=5')
   } catch (e) {
     return manejarError(e)
   }

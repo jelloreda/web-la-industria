@@ -77,7 +77,26 @@ async function escritura() {
   if (cita.datos?.uuid) {
     const leida = await y(`/booking/${cita.datos.uuid}`, { auth: true })
     console.log('   guardada como', { createdByType: leida.datos.createdByType, source: leida.datos.source, status: leida.datos.status })
-    console.log('4) Revisa AHORA si al teléfono de prueba le llegó SMS / WhatsApp / email / push. Tienes 60 s.')
+    console.log('   claves de notificación en la cita →', Object.keys(leida.datos).filter(k => /notif/i.test(k)))
+    const tipo = v => `${typeof v} ${JSON.stringify(v)}`
+    const mias = await y(`/booking/findBookingsByCommerce/${G}/customer/${cliente.uuid}`, { auth: true })
+    const lectura = (Array.isArray(mias.datos) ? mias.datos : []).find(b => b.uuid === cita.datos.uuid)
+    console.log('   findBookingsByCommerce →', mias.status, lectura ? {
+      startsDay: tipo(lectura.startsDay), startsHour: tipo(lectura.startsHour), startsMinute: tipo(lectura.startsMinute),
+      status: tipo(lectura.status), 'asignedTo.name': tipo(lectura.asignedTo?.name),
+      week: `${tipo(lectura.week)} (calculado ${semana.week})`, year: `${tipo(lectura.year)} (calculado ${semana.year})`,
+    } : 'cita no encontrada')
+    const libre = await y('/availability/employee', { method: 'POST', auth: true, body: { date: dia, hour: h, minute: m, employee: hueco.employee[0].uuid, servicesDuration: corte.defaultDuration, serviceCollection: [corte], userTimezone: 'Europe/Madrid' } })
+    console.log('   /availability/employee (esperado false) →', libre.status, libre.datos)
+    const limite = await y('/booking/limit', { method: 'POST', auth: true, body: { duration: corte.defaultDuration, hour: h, minute: m, date: dia, employee: { uuid: hueco.employee[0].uuid }, commerce: { uuid: G } } })
+    console.log('   /booking/limit length (esperado > 0) →', limite.status, Array.isArray(limite.datos) ? limite.datos.length : limite.datos)
+    const disp2 = await y('/availability', { method: 'POST', body: { commerce: G, date: dia, servicesDuration: corte.defaultDuration, serviceCollection: [corte], userTimezone: 'Europe/Madrid' } })
+    const propia = Array.isArray(disp2.datos) ? disp2.datos.find(e => e.employee.uuid === hueco.employee[0].uuid) : null
+    const aun = propia && Object.values(propia.availability).flat().some(x => x.label === hueco.label)
+    console.log('   /availability: ¿el hueco sigue ofrecido a ese barber? (esperado false) →', Boolean(aun))
+    const guardado = (Array.isArray(lista.datos) ? lista.datos : []).find(c => c.uuid === cliente.uuid)
+    console.log('   teléfono guardado (formato) →', String(guardado?.phone ?? '').replace(/\d/g, '9'))
+    console.log('4) Revisa AHORA si llegó algo a AMBOS: el teléfono del cliente de prueba (SMS / WhatsApp / email / push) y la app del barber asignado. Tienes 60 s.')
     await new Promise(r => setTimeout(r, 60000))
     const borrar = await y(`/booking/no-notification/${cita.datos.uuid}`, { method: 'DELETE', auth: true })
     console.log('   cita borrada sin notificar →', borrar.status)

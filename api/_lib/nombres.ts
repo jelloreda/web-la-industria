@@ -3,7 +3,7 @@ function capitalizar(p: string): string {
 }
 
 export function normalizarNombre(entrada: string): string {
-  return entrada.trim().split(/\s+/).filter(Boolean)
+  return entrada.replace(/\u2019/g, "'").trim().split(/\s+/).filter(Boolean)
     .map(palabra => palabra.split('-').map(capitalizar).join('-'))
     .join(' ')
 }

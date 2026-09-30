@@ -7,6 +7,11 @@ describe('nombres', () => {
     expect(normalizarNombre('maría josé garcía-PÉREZ')).toBe('María José García-Pérez')
   })
 
+  it('normaliza el apóstrofo tipográfico', () => {
+    expect(normalizarNombre('seán o’neill')).toBe("Seán O'neill")
+    expect(nombreValido(normalizarNombre('seán o’neill'))).toBe(true)
+  })
+
   it('exige nombre y al menos un apellido, hasta 60 caracteres, solo letras', () => {
     expect(nombreValido('Álvaro Martín')).toBe(true)
     expect(nombreValido('Álvaro')).toBe(false)

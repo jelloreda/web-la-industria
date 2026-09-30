@@ -21,6 +21,18 @@ export function aHuecosPublicos(fecha: string, disp: YDisponibilidad[], empleado
   const porHora = new Map<string, { date: string; franja: Franja; barberos: string[] }>()
   const barberos: BarberoPublico[] = []
 
+  // Yeasy decide a quién asigna "Cualquiera" en la entrada `uuid: "all"` (employee[0] de cada hora).
+  const asignadoPorHora = new Map<string, string>()
+  for (const entrada of Array.isArray(disp) ? disp : []) {
+    if (entrada.employee?.uuid !== 'all') continue
+    for (const [clave] of FRANJAS) {
+      for (const h of entrada.availability?.[clave] ?? []) {
+        const uuid = h.employee?.[0]?.uuid
+        if (uuid && !asignadoPorHora.has(h.label)) asignadoPorHora.set(h.label, uuid)
+      }
+    }
+  }
+
   for (const entrada of Array.isArray(disp) ? disp : []) {
     const emp = reservables.get(entrada.employee?.uuid)
     if (!emp) continue
@@ -39,7 +51,13 @@ export function aHuecosPublicos(fecha: string, disp: YDisponibilidad[], empleado
 
   const huecos: HuecoPublico[] = [...porHora.entries()]
     .sort((a, b) => a[1].date.localeCompare(b[1].date))
-    .map(([hora, v]) => ({ hora, franja: v.franja, barberos: v.barberos }))
+    .map(([hora, v]) => {
+      const asignado = asignadoPorHora.get(hora)
+      const barberos = asignado && v.barberos.includes(asignado)
+        ? [asignado, ...v.barberos.filter(id => id !== asignado)]
+        : v.barberos
+      return { hora, franja: v.franja, barberos }
+    })
 
   return { fecha, barberos, huecos }
 }

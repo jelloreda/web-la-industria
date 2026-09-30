@@ -97,6 +97,10 @@ The Vercel project root is the repo root, so Vercel reads the top-level `vercel.
 
 `app/public/` holds static files served as-is (favicon, OG image, `robots.txt`, `sitemap.xml`) — Vite copies this directory into the build output alongside the generated `index.html`.
 
+`.vercelignore` (repo root) keeps non-runtime files out of the deployment, because the output directory is the repo root and anything deployed would be served as a static file: `docs/`, `scripts/`, `tests/`, `tests-unit/`, `.superpowers/`, `screenshots/`, `playwright-report/`, `test-results/`, `.claude/`, `*.md`, `playwright.config.ts`, `vitest.config.mts`. `app/`, `api/`, `package.json`, `package-lock.json`, `tsconfig.json` and `vercel.json` must stay (the build and functions need them). `vercel.json` pins functions to `regions: ["cdg1"]` (near Yeasy/Madrid).
+
+Rollback of the in-site booking: `BOOKING_MODE = 'yeasy'` in `app/src/lib/brand.ts` only changes the UI (links back to Yeasy). A full rollback also means removing `YEASY_API_TOKEN` in Vercel so `/api/reservas` answers 503.
+
 ### Design spec
 
 Full section-by-section design decisions (copy, layout, animations, constraints) are documented in `docs/superpowers/specs/2026-03-30-la-industria-landing-design.md`. All copy is in Spanish.

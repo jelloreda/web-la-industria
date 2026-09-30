@@ -321,6 +321,11 @@ Precios y duraciones siempre se leen en vivo de Yeasy; la tabla es solo de refer
 | El cliente creado aparece en `commerceAndCreatedBynewV2` de la sede | pendiente — sonda de escritura antes de la Task 13 |
 | `POST /booking` modo cliente con el token de administrador | pendiente — sonda de escritura antes de la Task 13 |
 | Notificación al cliente | pendiente — sonda de escritura antes de la Task 13 |
+| Formato de `startsDay` / `startsHour` (tipo y valor al leerlos) | pendiente — sonda de escritura |
+| Textos de `status` de una cita recién creada | pendiente — sonda de escritura |
+| `week` / `year` guardados frente a los que calculamos | pendiente — sonda de escritura |
+| La cita Pendiente bloquea el hueco (`/availability/employee`, `/booking/limit`, `/availability`) | pendiente — sonda de escritura |
+| Notificación al barber (app) | pendiente — sonda de escritura |
 | "Cualquiera" lista varios barbers en un hueco | No |
 | Franjas presentes | morning, afternoon, evening |
 | **Decisión `MODO_CITA`** | `'cliente'` provisional (pendiente de la sonda de escritura) |
