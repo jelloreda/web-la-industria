@@ -1,19 +1,15 @@
 import { test, expect } from '@playwright/test'
-import path from 'path'
-
-const FILE_PATH = path.resolve(__dirname, '../index.html')
-const FILE_URL  = `file://${FILE_PATH}`
 
 test.describe('La Industria Landing Page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(FILE_URL)
+    await page.goto('/')
     await page.waitForLoadState('domcontentloaded')
   })
 
   test('loads without critical console errors', async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', err => errors.push(err.message))
-    await page.goto(FILE_URL)
+    await page.goto('/')
     await page.waitForLoadState('networkidle')
     // Allow Google Maps iframe errors — expected when offline
     const realErrors = errors.filter(e =>
@@ -26,26 +22,6 @@ test.describe('La Industria Landing Page', () => {
     const hero = page.locator('#hero')
     await expect(hero).toBeVisible()
     await expect(hero.locator('svg').first()).toBeVisible()
-  })
-
-  test('each location card books on its own Yeasy account', async ({ page }) => {
-    const guzman = page.locator('[data-testid="cta-reservar-guzman-el-bueno"]')
-    const arguelles = page.locator('[data-testid="cta-reservar-arguelles"]')
-    await expect(guzman).toHaveAttribute('href', 'https://cut.yeasyapp.com/J0W7kF')
-    await expect(arguelles).toHaveAttribute('href', 'https://cut.yeasyapp.com/bVr605')
-    await expect(guzman).toHaveAttribute('target', '_blank')
-    await expect(arguelles).toHaveAttribute('target', '_blank')
-  })
-
-  test('nav Reservar opens the location picker with both locations', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 })
-    await page.getByRole('navigation').getByRole('button', { name: 'Reservar' }).click()
-    const picker = page.locator('[data-testid="location-picker"]')
-    await expect(picker).toBeVisible()
-    await expect(picker.locator('[data-testid="picker-guzman-el-bueno"]'))
-      .toHaveAttribute('href', 'https://cut.yeasyapp.com/J0W7kF')
-    await expect(picker.locator('[data-testid="picker-arguelles"]'))
-      .toHaveAttribute('href', 'https://cut.yeasyapp.com/bVr605')
   })
 
   test('contact tabs switch location details', async ({ page }) => {
@@ -67,7 +43,7 @@ test.describe('La Industria Landing Page', () => {
 
   test('desktop screenshot at 1280px', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
-    await page.goto(FILE_URL)
+    await page.goto('/')
     await page.waitForLoadState('networkidle')
     await page.waitForTimeout(1500)
     await page.screenshot({
@@ -78,7 +54,7 @@ test.describe('La Industria Landing Page', () => {
 
   test('mobile screenshot at 390px', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
-    await page.goto(FILE_URL)
+    await page.goto('/')
     await page.waitForLoadState('networkidle')
     await page.waitForTimeout(1500)
     await page.screenshot({

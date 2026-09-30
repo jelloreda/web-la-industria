@@ -2,14 +2,14 @@ import { ArrowRight, Star } from 'lucide-react'
 import { LogoMark } from './LogoMark'
 import { Particles } from './magicui/particles'
 import { ShimmerButton } from './magicui/shimmer-button'
-import { useLocationPicker } from './LocationPicker'
+import { useBooking } from './booking/BookingProvider'
 import { cn } from '@/lib/utils'
 import { LOCATIONS } from '@/lib/brand'
 
 // Campaña temporal "dos sedes" (hasta finales de octubre 2026).
 // Se activa/desactiva con CAMPAIGN_ACTIVE en lib/brand.ts.
 export function HeroCampaign() {
-  const openPicker = useLocationPicker()
+  const { open } = useBooking()
 
   return (
     <section
@@ -48,7 +48,7 @@ export function HeroCampaign() {
           </p>
 
           <div className="hidden lg:flex items-center gap-8">
-            <ShimmerButton onClick={openPicker}>Reservar cita</ShimmerButton>
+            <ShimmerButton onClick={() => open()}>Reservar cita</ShimmerButton>
             <a
               href="#reservas"
               className="font-work-sans font-medium text-[10px] uppercase tracking-[0.35em] text-arena hover:text-cream transition-colors border-b border-arena/30 pb-0.5 hover:border-cream/50"
@@ -61,12 +61,12 @@ export function HeroCampaign() {
         {/* Sedes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
           {LOCATIONS.map(l => (
-            <a
+            <button
               key={l.id}
-              href={l.bookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              type="button"
+              onClick={() => open(l.id)}
               className={cn(
+                'text-left w-full',
                 'group flex flex-col gap-4 lg:gap-5 p-5 lg:p-9 border transition-colors',
                 l.isNew
                   ? 'bg-cream text-carbon border-cream hover:bg-cream-bg'
@@ -93,7 +93,7 @@ export function HeroCampaign() {
                   <ArrowRight size={16} strokeWidth={1.5} className="group-hover:translate-x-1 transition-transform" />
                 </span>
               </span>
-            </a>
+            </button>
           ))}
         </div>
       </div>

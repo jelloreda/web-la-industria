@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { useBooking } from './booking/BookingProvider'
 import { CalendarCheck, ChevronLeft, ChevronRight, Clock, MapPin, Users } from 'lucide-react'
 import guzman01 from '@/assets/guzman-01.webp'
 import guzman02 from '@/assets/guzman-02.webp'
@@ -76,6 +77,7 @@ function PhotoCarousel({ photos, name }: { photos: string[]; name: string }) {
 }
 
 function LocationCard({ location: l }: { location: Location }) {
+  const { open } = useBooking()
   return (
     <article className="bg-dark2 border border-cream/5 flex flex-col">
       <div className="relative">
@@ -120,15 +122,14 @@ function LocationCard({ location: l }: { location: Location }) {
         </div>
 
         <div className="mt-auto flex flex-col gap-3.5 items-stretch">
-          <a
-            href={l.bookingUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => open(l.id)}
             data-testid={`cta-reservar-${l.id}`}
-            className="block text-center px-6 py-4 bg-cream text-carbon hover:bg-cream-bg font-work-sans font-bold text-[13px] uppercase tracking-[0.25em] transition-colors"
+            className="block w-full text-center px-6 py-4 bg-cream text-carbon hover:bg-cream-bg font-work-sans font-bold text-[13px] uppercase tracking-[0.25em] transition-colors"
           >
             Reservar aquí
-          </a>
+          </button>
           <a
             href={l.mapsUrl}
             target="_blank"
@@ -170,7 +171,7 @@ export function Booking() {
         </div>
 
         <p className="mt-8 font-work-sans text-[9px] uppercase tracking-[0.3em] text-gray-stone">
-          Cada sede tiene su propia agenda · Powered by Yeasy
+          Cada sede tiene su propia agenda
         </p>
       </div>
     </section>

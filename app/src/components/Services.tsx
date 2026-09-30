@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardContent } from './ui/card'
-import { useLocationPicker } from './LocationPicker'
+import { useBooking } from './booking/BookingProvider'
 
 const services = [
   { name: 'Corte de pelo standard',      price: '16 €',       desc: 'Corte clásico o moderno adaptado a tu estilo.'                                  },
@@ -13,7 +13,7 @@ const services = [
 ]
 
 function ServiceCard({ name, price, desc, index }: typeof services[0] & { index: number }) {
-  const openPicker = useLocationPicker()
+  const { open } = useBooking()
 
   return (
     <Card
@@ -46,7 +46,7 @@ function ServiceCard({ name, price, desc, index }: typeof services[0] & { index:
         <p className="font-work-sans text-xs leading-relaxed text-gray-stone mb-4">{desc}</p>
         <button
           type="button"
-          onClick={openPicker}
+          onClick={() => open()}
           className="inline-block font-work-sans font-medium text-[10px] uppercase tracking-[0.2em] text-cream/70 hover:text-cream border border-cream/20 hover:border-cream/50 px-3 py-1.5 transition-colors duration-300"
         >
           Reservar
