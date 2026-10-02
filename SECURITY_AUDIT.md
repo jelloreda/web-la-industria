@@ -1,12 +1,14 @@
 # Auditoría de seguridad — laindustriabarber.com
 
-Fecha: 2026-10-02 · Alcance: repositorio `jelloreda/web-la-industria` (rama `main`, commit `cad18a1`) y configuración de despliegue.
+Fecha: 2026-10-02 (actualizado tras aplicar H-01, H-02 y H-03) · Alcance: repositorio `jelloreda/web-la-industria` (rama `main`, commit `cad18a1`) y configuración de despliegue.
 
 > **Limitación importante.** Desde el entorno de esta auditoría la conexión a `https://www.laindustriabarber.com/` fue bloqueada por el proxy (HTTP 403 al abrir el túnel), así que **la Fase 2 (producción) no se ha podido verificar**. Todo lo que dependa de lo que realmente responde el sitio, el DNS o el panel de Vercel/GitHub está marcado **"no verificado"**. En la sección 6 tienes los comandos para comprobarlo tú en dos minutos.
 
 ## 1. Resumen ejecutivo
 
 La web es sencilla y está bien construida: no hay contraseñas ni claves en el código ni en el historial de git, no hay vulnerabilidades en las librerías que llegan al navegador, y los textos que escribe el visitante no se pueden usar para inyectar código. La clave de acceso a Yeasy (la agenda) vive solo en el servidor. El riesgo real no es que "hackeen la web", sino que **alguien pueda llenar la agenda de citas falsas**, porque el formulario de reserva no tiene límite de uso ni verificación del teléfono. Lo segundo más relevante es legal: faltan la política de privacidad y el aviso legal, y la web recoge nombre y teléfono. El resto son endurecimientos menores. No hay nada crítico ni de severidad alta.
+
+**Avance:** ya están aplicados en el repositorio los arreglos de código de los dos riesgos principales (H-01 y H-02) y las páginas legales (H-03). Para darlos por cerrados faltan acciones tuyas en los paneles de Vercel y rellenar dos datos legales (ver sección 6). El resto de hallazgos (de severidad baja o informativa) siguen pendientes.
 
 ## 2. Qué se ha encontrado (stack y superficie)
 
@@ -20,20 +22,22 @@ La web es sencilla y está bien construida: no hay contraseñas ni claves en el 
 
 ## 3. Hallazgos
 
-| ID | Título | Severidad | Ubicación |
-|----|--------|-----------|-----------|
-| H-01 | Reserva sin límite de uso ni verificación: se puede llenar la agenda de citas falsas | **Media** | `api/reservas/index.ts:4-21`, `api/_lib/reservas.ts:28-55` |
-| H-02 | Previews de Vercel con el token real de administrador | **Media** (no verificado) | Config de Vercel (`CLAUDE.md`: "Preview + Production") |
-| H-03 | Sin política de privacidad ni aviso legal; sin información al recoger datos | **Media** | `StepDatos.tsx:114`, `Contact.tsx:160` |
-| H-04 | Mapa de Google carga al entrar en la sección, posibles cookies de terceros sin consentimiento | **Baja** (no verificado) | `Contact.tsx:140` |
-| H-05 | La respuesta de reserva revela si un teléfono ya tiene cita a esa hora | **Baja** | `api/_lib/reservas.ts:101-104` |
-| H-06 | El directorio de salida es la raíz del repo y `.env` no está ignorado | **Baja** | `.gitignore`, `.vercelignore`, `vercel.json` (`outputDirectory: "."`) |
-| H-07 | CSP mejorable (falta `frame-ancestors`, `form-action`, `img-src` amplio) | **Baja** | `vercel.json:34` |
-| H-08 | Token de Yeasy con permisos de administrador y vida de ~700 días | **Baja** | `api/_lib/yeasy.ts:39` |
-| H-09 | `main` sin protección y workflow de CI sin permisos mínimos | **Baja** | GitHub, `.github/workflows/playwright.yml` |
-| H-10 | Entradas sin longitud máxima en el servidor | **Informativa** | `api/_lib/reservas.ts:28-31` |
-| H-11 | `vitest` con aviso moderado (solo desarrollo) | **Informativa** | `package.json` (devDependencies) |
-| H-12 | Pie con "© 2025", README desactualizado, `.DS_Store` commiteado | **Informativa** | `Contact.tsx:160`, `README.md`, `docs/superpowers/.DS_Store` |
+*Las referencias de archivo:línea corresponden al commit auditado (`cad18a1`); tras los arreglos algunas líneas se han desplazado.*
+
+| ID | Título | Severidad | Ubicación | Estado |
+|----|--------|-----------|-----------|--------|
+| H-01 | Reserva sin límite de uso ni verificación: se puede llenar la agenda de citas falsas | **Media** | `api/reservas/index.ts:4-21`, `api/_lib/reservas.ts:28-55` | Parcial: código aplicado; falta rate limit en Vercel |
+| H-02 | Previews de Vercel con el token real de administrador | **Media** (no verificado) | Config de Vercel (`CLAUDE.md`: "Preview + Production") | Código aplicado; falta quitar el token de Preview en Vercel |
+| H-03 | Sin política de privacidad ni aviso legal; sin información al recoger datos | **Media** | `StepDatos.tsx:114`, `Contact.tsx:160` | Implementado; faltan 2 datos legales (domicilio, Registro Mercantil) |
+| H-04 | Mapa de Google carga al entrar en la sección, posibles cookies de terceros sin consentimiento | **Baja** (no verificado) | `Contact.tsx:140` | Pendiente |
+| H-05 | La respuesta de reserva revela si un teléfono ya tiene cita a esa hora | **Baja** | `api/_lib/reservas.ts:101-104` | Pendiente |
+| H-06 | El directorio de salida es la raíz del repo y `.env` no está ignorado | **Baja** | `.gitignore`, `.vercelignore`, `vercel.json` (`outputDirectory: "."`) | Pendiente |
+| H-07 | CSP mejorable (falta `frame-ancestors`, `form-action`, `img-src` amplio) | **Baja** | `vercel.json:34` | Pendiente |
+| H-08 | Token de Yeasy con permisos de administrador y vida de ~700 días | **Baja** | `api/_lib/yeasy.ts:39` | Pendiente (acción manual) |
+| H-09 | `main` sin protección y workflow de CI sin permisos mínimos | **Baja** | GitHub, `.github/workflows/playwright.yml` | Pendiente |
+| H-10 | Entradas sin longitud máxima en el servidor | **Informativa** | `api/_lib/reservas.ts:28-31` | Pendiente |
+| H-11 | `vitest` con aviso moderado (solo desarrollo) | **Informativa** | `package.json` (devDependencies) | Pendiente |
+| H-12 | Pie con "© 2025", README desactualizado, `.DS_Store` commiteado | **Informativa** | `Contact.tsx:160`, `README.md`, `docs/superpowers/.DS_Store` | Parcial: "© 2025" corregido |
 
 ### H-01 — Reserva sin límite de uso ni verificación (Media)
 
@@ -66,7 +70,7 @@ if (origen && new URL(origen).host !== new URL(request.url).host) return errorJs
 
 ### H-03 — Sin política de privacidad ni aviso legal (Media)
 
-**Estado: implementado, pendiente de completar datos.** Páginas `/aviso-legal.html` y `/privacidad.html`, enlaces en el pie, aviso con el responsable y enlace en el formulario de reserva. Quedan marcadores `[COMPLETAR: …]` (domicilio social, datos del Registro Mercantil y razón social/NIF de Yeasy; la política y el aviso legal de Yeasy ya están enlazados) que hay que rellenar **antes de publicar en producción**. Sin email de contacto por decisión del titular: se ofrece teléfono/WhatsApp y atención presencial. Los textos son un borrador y conviene que los revise un gestor o abogado.
+**Estado: implementado, pendiente de completar datos.** Páginas `/aviso-legal.html` y `/privacidad.html`, enlaces en el pie, aviso con el responsable (INDUSTRIA COL 25, NIF B22737167) y enlace en el formulario de reserva. La política nombra a **FASTBOOK, S.L.** (NIF B42969626, titular de Yeasy) como encargado del tratamiento, con los datos tomados de su política de privacidad que facilitó el titular (no he podido consultar `yeasy.io`, bloqueado desde este entorno); el enlace es a `yeasy.io` en general, sin la URL exacta de su política. **Quedan solo dos marcadores `[COMPLETAR: …]`: domicilio social y datos del Registro Mercantil de INDUSTRIA COL 25**, que hay que rellenar **antes de publicar en producción**. Sin email de contacto por decisión del titular: se ofrece teléfono/WhatsApp y atención presencial (la LSSI admite "otro medio de comunicación electrónica"; conviene que el gestor lo confirme). Pendiente de verificar: las garantías de transferencia de Vercel (EE. UU.) que cita la política, y que el contrato con Yeasy incluya el encargo de tratamiento (art. 28 RGPD). Los textos son un borrador y conviene que los revise un gestor o abogado.
 
 **Descripción.** La web recoge nombre y teléfono (datos personales) y no contiene ninguna política de privacidad, aviso legal ni identificación del titular (búsqueda en `app/src` y `index.html`: 0 resultados). Lo único que se informa es "Tu teléfono solo sirve para gestionar la cita" (`StepDatos.tsx:114`). El RGPD (art. 13) exige informar de responsable, finalidad, base legal, destinatarios (Yeasy es encargado del tratamiento), plazo y derechos; la LSSI (art. 10) exige datos identificativos del titular de la web.
 
@@ -159,6 +163,8 @@ telefono: z.string().max(20), website: z.string().max(200).optional(),
 
 ### H-12 — Limpieza menor (Informativa)
 
+**Estado: parcial.** El año del pie ya es dinámico (`new Date().getFullYear()`). Siguen pendientes el README y el `.DS_Store`.
+
 El pie dice "© 2025" (`Contact.tsx:160`). `README.md` menciona React 19 y un `app/vercel.json` que ya no existe (la configuración real está en `vercel.json` de la raíz). `docs/superpowers/.DS_Store` está commiteado (inofensivo).
 
 ## 4. Lo que está bien hecho (no tocar)
@@ -178,17 +184,17 @@ El pie dice "© 2025" (`Contact.tsx:160`). `README.md` menciona React 19 y un `a
 ## 5. Plan de acción
 
 **Quick wins (menos de 1 hora en total)**
-1. Activar Deployment Protection en previews / quitar el token de Preview (H-02).
+1. Activar Deployment Protection en previews / quitar el token de Preview (H-02). *Código ya aplicado; falta el panel.*
 2. Regla de rate limit en el Firewall de Vercel para `/api/reservas` (H-01.1).
 3. `.env*`, `.DS_Store`, `.github/` en `.gitignore`/`.vercelignore` (H-06).
 4. `permissions: contents: read` en el workflow y protección de `main` (H-09).
 5. Límites `.max()` en el esquema (H-10) y fix del duplicado (H-05).
 6. Añadir `form-action`, `frame-ancestors`, `upgrade-insecure-requests` a la CSP (H-07).
-7. Actualizar "© 2025" y README (H-12).
+7. ~~Actualizar "© 2025"~~ (hecho) y README (H-12).
 
 **Cambios mayores**
-1. Política de privacidad + aviso legal enlazados desde pie y formulario (H-03). *Prioridad alta aunque no sea código.*
-2. Turnstile + tope de citas futuras por teléfono (H-01.2-3).
+1. ✅ Política de privacidad + aviso legal enlazados desde pie y formulario (H-03). *Hecho; faltan domicilio y datos registrales.*
+2. Turnstile (pendiente) + ✅ tope de citas futuras por teléfono (hecho) (H-01.2-3).
 3. Mapa con carga bajo clic (H-04), tras verificar si hay cookies.
 4. Confirmación por WhatsApp/SMS al teléfono reservado (H-01.5).
 5. Compilar a `dist/` en vez de la raíz (H-06).
@@ -213,3 +219,17 @@ dig +short TXT default._domainkey.laindustriabarber.com   # el selector DKIM dep
 Además: abrir la web con DevTools → Application → Cookies (antes de interactuar y tras ver el mapa) y revisar `mxtoolbox.com/SuperTool` o similar para SPF/DKIM/DMARC. Si el dominio no envía correo, igualmente conviene `v=spf1 -all` y `v=DMARC1; p=reject`.
 
 *Sin verificar:* TLS/certificado, redirecciones, cabeceras reales, archivos expuestos en producción, DNS/correo/subdomain takeover, cookies reales, 2FA, permisos de colaboradores en Vercel, configuración de previews.
+
+## 7. Registro de lo comprobado hasta ahora
+
+**Hecho en el repositorio (rama `claude/affectionate-mayer-h2x941`, un commit por hallazgo):**
+- H-02: `api/_lib/yeasy.ts` no usa el token si `VERCEL_ENV === 'preview'`; `CLAUDE.md` actualizado (token solo en Production).
+- H-01: tope de 2 citas futuras activas por teléfono (`NO_DISPONIBLE`, 429) y rechazo (403) de `POST /api/reservas` con `Origin` de otra web.
+- H-03: páginas legales, enlaces en pie y formulario, sitemap.
+- Pruebas: 77 tests unitarios y `typecheck:api` correctos; 21 tests e2e correctos en Chromium. Los 2 de `tests/example.spec.ts` (plantilla de Playwright que abre playwright.dev) fallan porque ese dominio está bloqueado desde este entorno. Firefox y WebKit no se han podido probar aquí (navegadores no instalados).
+
+**Comprobado en GitHub (vía API):** repositorio público, un único colaborador (administrador), `main` y las otras ramas sin protección.
+
+**Datos aportados por el titular y no verificados por mí:** razón social y NIF de INDUSTRIA COL 25; texto de la política de privacidad y del aviso legal de Yeasy (FASTBOOK, S.L.). Los dominios `yeasy.io`, `apps.apple.com` y `laindustriabarber.com` están bloqueados desde este entorno.
+
+**Sigue sin verificarse (producción, DNS y paneles):** cabeceras reales, TLS y redirecciones, archivos expuestos, SPF/DKIM/DMARC/CAA, cookies reales (incluido el mapa de Google), 2FA, configuración de previews y permisos en Vercel, y si la regla de rate limit está disponible en tu plan.
