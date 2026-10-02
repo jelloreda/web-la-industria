@@ -51,7 +51,7 @@ Vercel Functions, the only door to `api.yeasy.io`. `api/_lib/` is shared code (n
 | `GET /api/reservas/huecos?sede=&servicio=&fecha=` | Slots for one day via `POST /availability` (never `/availability/v2`, which jumps to the next open day). Only barbers with slots that day, no admin staff |
 | `POST /api/reservas` | Validates, re-checks the slot, finds the customer by phone (digits only) or creates it, avoids duplicates, creates the booking |
 
-Env vars (Vercel, Preview + Production): `YEASY_API_TOKEN` (admin JWT, ~700 days — renewal steps in `contabilidad-la-industria/yeasy-mcp-server/README.md`). Customers are created with the sede's commerce uuid as creator (`createdBy`) and a random password nobody knows (Yeasy requires a non-empty one; customers use "olvidé mi contraseña" in the Yeasy app). `scripts/yeasy-sonda.mjs` re-checks the Yeasy contracts.
+Env vars (Vercel, **Production only** — previews are public URLs, and `api/_lib/yeasy.ts` refuses to use the token when `VERCEL_ENV === 'preview'` even if it is set): `YEASY_API_TOKEN` (admin JWT, ~700 days — renewal steps in `contabilidad-la-industria/yeasy-mcp-server/README.md`). Customers are created with the sede's commerce uuid as creator (`createdBy`) and a random password nobody knows (Yeasy requires a non-empty one; customers use "olvidé mi contraseña" in the Yeasy app). `scripts/yeasy-sonda.mjs` re-checks the Yeasy contracts.
 
 ### Styling
 

@@ -34,6 +34,16 @@ describe('yeasy', () => {
     await expect(yeasy('/x')).rejects.toMatchObject({ codigo: 'AGENDA_NO_DISPONIBLE' })
   })
 
+  it('en preview de Vercel no usa el token aunque exista, pero sí deja las lecturas públicas', async () => {
+    vi.stubEnv('VERCEL_ENV', 'preview')
+    const llamadas = fetchFalso({ 'GET /publico': () => ({ ok: 1 }), 'GET /privado': () => ({ ok: 2 }) })
+    await expect(yeasy('/privado', { auth: true })).rejects.toMatchObject({ codigo: 'AGENDA_NO_DISPONIBLE', status: 503 })
+    expect(llamadas).toHaveLength(0)
+    await expect(yeasy('/publico')).resolves.toEqual({ ok: 1 })
+    vi.stubEnv('VERCEL_ENV', 'production')
+    await expect(yeasy('/privado', { auth: true })).resolves.toEqual({ ok: 2 })
+  })
+
   it('sin token no llama a Yeasy', async () => {
     vi.stubEnv('YEASY_API_TOKEN', '')
     const llamadas = fetchFalso({})

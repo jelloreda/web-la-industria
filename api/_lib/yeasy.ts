@@ -36,6 +36,11 @@ export async function yeasy<T>(ruta: string, { method = 'GET', body, auth = fals
 
   const headers: Record<string, string> = { 'Content-Type': 'application/json', 'x-app-version': '2.1.0' }
   if (auth) {
+    // Las previews de Vercel son URLs públicas: nunca actúan con el token de administrador sobre la agenda real.
+    if (process.env.VERCEL_ENV === 'preview') {
+      console.error('[yeasy] llamada con token bloqueada en preview', method, url.pathname)
+      throw new ErrorReserva('AGENDA_NO_DISPONIBLE', 503)
+    }
     const token = process.env.YEASY_API_TOKEN
     if (!token) {
       console.error('[yeasy] falta YEASY_API_TOKEN')
