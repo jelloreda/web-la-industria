@@ -66,6 +66,8 @@ if (origen && new URL(origen).host !== new URL(request.url).host) return errorJs
 
 ### H-03 — Sin política de privacidad ni aviso legal (Media)
 
+**Estado: implementado, pendiente de completar datos.** Páginas `/aviso-legal.html` y `/privacidad.html`, enlaces en el pie, aviso con el responsable y enlace en el formulario de reserva. Quedan marcadores `[COMPLETAR: …]` (domicilio social, datos del Registro Mercantil, razón social y política de Yeasy) que hay que rellenar **antes de publicar en producción**. Sin email de contacto por decisión del titular: se ofrece teléfono/WhatsApp y atención presencial. Los textos son un borrador y conviene que los revise un gestor o abogado.
+
 **Descripción.** La web recoge nombre y teléfono (datos personales) y no contiene ninguna política de privacidad, aviso legal ni identificación del titular (búsqueda en `app/src` y `index.html`: 0 resultados). Lo único que se informa es "Tu teléfono solo sirve para gestionar la cita" (`StepDatos.tsx:114`). El RGPD (art. 13) exige informar de responsable, finalidad, base legal, destinatarios (Yeasy es encargado del tratamiento), plazo y derechos; la LSSI (art. 10) exige datos identificativos del titular de la web.
 
 **Impacto.** No es un riesgo técnico; es de cumplimiento. Para un negocio pequeño la probabilidad de sanción es baja, pero es lo que primero reclama una inspección o una queja de un cliente.

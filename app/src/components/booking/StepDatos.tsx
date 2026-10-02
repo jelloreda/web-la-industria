@@ -111,7 +111,8 @@ export function StepDatos({ estado, dispatch }: { estado: EstadoReserva; dispatc
           />
 
           <p className="font-work-sans text-[11px] leading-relaxed text-arena">
-            Si ya has venido antes, usamos tu ficha. Tu teléfono solo sirve para gestionar la cita.
+            Si ya has venido antes, usamos tu ficha. INDUSTRIA COL 25 trata tu nombre y tu teléfono solo para gestionar la cita.{' '}
+            <a href="/privacidad.html" target="_blank" rel="noopener noreferrer" className="text-cream underline underline-offset-[3px]">Política de privacidad</a>
           </p>
         </div>
       </Cuerpo>

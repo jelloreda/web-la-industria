@@ -156,9 +156,15 @@ export function Contact() {
       <footer className="bg-carbon border-t border-white/5 py-10 px-6">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <LogoMark showText={false} iconSize={40} />
-          <p className="font-work-sans text-[8px] uppercase tracking-[0.3em] text-gray-stone/50 text-center">
-            © 2025 La Industria · Todos los derechos reservados
-          </p>
+          <div className="flex flex-col items-center gap-3">
+            <p className="font-work-sans text-[8px] uppercase tracking-[0.3em] text-gray-stone/50 text-center">
+              © {new Date().getFullYear()} La Industria · Todos los derechos reservados
+            </p>
+            <nav aria-label="Información legal" className="flex gap-6 font-work-sans text-[9px] uppercase tracking-[0.3em] text-gray-stone">
+              <a href="/aviso-legal.html" className="hover:text-cream transition-colors">Aviso legal</a>
+              <a href="/privacidad.html" className="hover:text-cream transition-colors">Privacidad</a>
+            </nav>
+          </div>
           <a
             href={IG_URL}
             target="_blank"

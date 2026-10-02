@@ -64,4 +64,16 @@ test.describe('La Industria Landing Page', () => {
       fullPage: true,
     })
   })
+
+  test('el pie enlaza el aviso legal y la política de privacidad, y las páginas existen', async ({ page }) => {
+    const nav = page.getByRole('navigation', { name: 'Información legal' })
+    await expect(nav.getByRole('link', { name: 'Aviso legal' })).toHaveAttribute('href', '/aviso-legal.html')
+    await expect(nav.getByRole('link', { name: 'Privacidad' })).toHaveAttribute('href', '/privacidad.html')
+    for (const ruta of ['/aviso-legal.html', '/privacidad.html']) {
+      await page.goto(ruta)
+      await expect(page.locator('main')).toContainText('INDUSTRIA COL 25')
+      await expect(page.locator('main')).toContainText('B22737167')
+      await expect(page.getByRole('link', { name: /Volver a la web/ })).toHaveAttribute('href', '/')
+    }
+  })
 })

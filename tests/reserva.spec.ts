@@ -97,6 +97,15 @@ test.describe('datos y confirmación', () => {
     return { panel, cuerpos }
   }
 
+  test('el formulario informa del responsable y enlaza la política de privacidad', async ({ page }) => {
+    const { panel } = await hastaDatos(page)
+    await expect(panel).toContainText('INDUSTRIA COL 25')
+    const enlace = panel.getByRole('link', { name: 'Política de privacidad' })
+    await expect(enlace).toHaveAttribute('href', '/privacidad.html')
+    await expect(enlace).toHaveAttribute('target', '_blank')
+    await expect(enlace).toHaveAttribute('rel', /noopener/)
+  })
+
   test('valida al enviar y no llama a la API con datos malos', async ({ page }) => {
     const { panel, cuerpos } = await hastaDatos(page)
     await panel.getByRole('button', { name: 'Reservar cita' }).click()
