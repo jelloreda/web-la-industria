@@ -1,7 +1,19 @@
 import { errorJson, json, manejarError } from '../_lib/http'
 import { crearReserva, validarPeticion } from '../_lib/reservas'
 
+/** Un navegador siempre manda Origin en un POST: si no es esta misma web, la petición viene de otra página. */
+function origenAjeno(request: Request): boolean {
+  const origen = request.headers.get('origin')
+  if (!origen) return false
+  try {
+    return new URL(origen).host !== new URL(request.url).host
+  } catch {
+    return true
+  }
+}
+
 export async function POST(request: Request): Promise<Response> {
+  if (origenAjeno(request)) return errorJson('DATOS_INVALIDOS', 403)
   let body: unknown
   try {
     body = await request.json()

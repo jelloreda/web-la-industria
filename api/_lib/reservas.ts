@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { buscarClientePorTelefono, crearCliente } from './clientes'
 import { ErrorReserva } from './errores'
-import { esFechaReservable, semanaIso } from './fecha'
+import { esFechaReservable, fechaMadrid, semanaIso } from './fecha'
 import { aHuecosPublicos, disponibilidad, empleadosDeSede } from './huecos'
 import { nombreValido, normalizarNombre } from './nombres'
 import { sedePorId, type SedeYeasy } from './sedes'
@@ -64,10 +64,12 @@ function aCita(d: DatosReserva, servicio: YServicio, barbero: string): CitaConfi
 
 const CITA_ANULADA = /cancel|anul|no.?show|rechaz/i
 
-async function citaPrevia(commerceUuid: string, clienteUuid: string, fecha: string, hour: number, minute: number): Promise<YCita | null> {
+/** Citas futuras activas que puede tener un mismo teléfono: frena que alguien ocupe la agenda con un solo número. */
+export const MAX_CITAS_FUTURAS = 2
+
+async function citasActivas(commerceUuid: string, clienteUuid: string): Promise<YCita[]> {
   const citas = await yeasy<YCita[]>(`/booking/findBookingsByCommerce/${commerceUuid}/customer/${clienteUuid}`, { auth: true })
-  return (Array.isArray(citas) ? citas : [])
-    .find(c => !c.isDeleted && !CITA_ANULADA.test(c.status ?? '') && c.startsDay === fecha && c.startsHour === hour && c.startsMinute === minute) ?? null
+  return (Array.isArray(citas) ? citas : []).filter(c => !c.isDeleted && !CITA_ANULADA.test(c.status ?? ''))
 }
 
 function cuerpoCitaCliente(d: DatosReserva, servicio: YServicio, cliente: YCliente, barberoId: string, hour: number, minute: number) {
@@ -99,8 +101,11 @@ export async function crearReserva(d: DatosReserva, ahora: Date): Promise<CitaCo
   const existente = await buscarClientePorTelefono(commerce, d.telefono)
   if (existente?.isBlocked) throw new ErrorReserva('AGENDA_NO_DISPONIBLE', 503)
   if (existente) {
-    const previa = await citaPrevia(commerce, existente.uuid, d.fecha, hour, minute)
+    const citas = await citasActivas(commerce, existente.uuid)
+    const previa = citas.find(c => c.startsDay === d.fecha && c.startsHour === hour && c.startsMinute === minute)
     if (previa) return aCita(d, servicio, previa.asignedTo?.name?.trim() ?? '')
+    const hoy = fechaMadrid(ahora)
+    if (citas.filter(c => c.startsDay >= hoy).length >= MAX_CITAS_FUTURAS) throw new ErrorReserva('NO_DISPONIBLE', 429)
   }
 
   const [disp, empleados] = await Promise.all([disponibilidad(commerce, d.fecha, servicio), empleadosDeSede(commerce)])

@@ -37,6 +37,8 @@ La web es sencilla y está bien construida: no hay contraseñas ni claves en el 
 
 ### H-01 — Reserva sin límite de uso ni verificación (Media)
 
+**Estado: parcialmente corregido en código** (tope de 2 citas futuras por teléfono y comprobación de `Origin`). **Pendiente:** regla de rate limit en el Firewall de Vercel (panel) y, a medio plazo, Turnstile y confirmación por WhatsApp/SMS. Un atacante con muchos números distintos sigue sin ser frenado por el tope; solo el rate limit y el CAPTCHA lo cubren.
+
 **Descripción.** `POST /api/reservas` solo se protege con un campo trampa (`website`). Cualquier script puede enviar peticiones con nombre y teléfono válidos (formato) sin que nada lo frene: no hay rate limiting, ni CAPTCHA, ni verificación del teléfono por SMS/WhatsApp, ni tope de citas futuras por teléfono. Cada petición dispara varias llamadas a Yeasy con el token de administrador, incluida la descarga de **toda la lista de clientes de la sede** (`clientes.ts:8`). El repo es público, así que la lógica y las rutas son conocidas. Los `GET` de huecos/servicios tienen caché de 5 s/300 s, pero cambiando parámetros se esquiva.
 
 **Impacto real.** Alguien (competidor, bromista, bot) podría ocupar huecos de la agenda con citas falsas, crear fichas de cliente basura en Yeasy, o usar el teléfono de otra persona para reservarle citas. No hay robo de datos ni acceso a nada más; el daño es de molestias y citas perdidas, y posible consumo de cuota de la API de Yeasy.
@@ -53,6 +55,8 @@ if (origen && new URL(origen).host !== new URL(request.url).host) return errorJs
 5. Aviso por WhatsApp/SMS de confirmación al teléfono reservado (lo ideal a medio plazo; mitiga el uso de teléfonos ajenos).
 
 ### H-02 — Previews de Vercel con el token real (Media, no verificado)
+
+**Estado: corregido en código** (el servidor no usa el token si `VERCEL_ENV === 'preview'`). **Pendiente en el panel:** borrar `YEASY_API_TOKEN` del entorno Preview y activar Deployment Protection.
 
 **Descripción.** `CLAUDE.md` indica que `YEASY_API_TOKEN` está en *Preview + Production*. Cada rama/PR genera una URL de preview con la misma API de reservas contra la agenda real. Si esas previews no están protegidas, cualquiera que conozca la URL puede crear citas reales desde ahí. El repo es público, así que los nombres de rama (`feat/...`) se ven.
 

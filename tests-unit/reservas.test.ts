@@ -138,6 +138,26 @@ describe('crearReserva', () => {
     await expect(crearReserva(datos(), AHORA)).rejects.toMatchObject({ codigo: 'AGENDA_NO_DISPONIBLE', status: 503 })
   })
 
+  it('un teléfono con 2 citas futuras no puede reservar otra, pero repetir una existente sigue devolviéndola', async () => {
+    const cita = (startsDay: string, startsHour: number, extra = {}) => ({ uuid: startsDay + startsHour, startsDay, startsHour, startsMinute: 0, isDeleted: false, ...extra })
+    const llamadas = rutas({
+      'GET /booking/findBookingsByCommerce/.+': () => [
+        cita('2026-10-02', 10), cita('2026-10-03', 11),
+        cita('2026-10-04', 12, { status: 'Cancelada' }), cita('2026-09-20', 10), // no cuentan
+      ],
+    })
+    await expect(crearReserva(datos(), AHORA)).rejects.toMatchObject({ codigo: 'NO_DISPONIBLE', status: 429 })
+    expect(llamadas.some(l => l.metodo === 'POST' && l.ruta.startsWith('/booking'))).toBe(false)
+    // la misma cita ya reservada no se bloquea por el tope
+    const repetida = await crearReserva(datos({ fecha: '2026-10-02', hora: '10:00' }), AHORA)
+    expect(repetida.fecha).toBe('2026-10-02')
+  })
+
+  it('con 1 cita futura todavía puede reservar otra', async () => {
+    rutas({ 'GET /booking/findBookingsByCommerce/.+': () => [{ uuid: 'a', startsDay: '2026-10-02', startsHour: 10, startsMinute: 0, isDeleted: false }] })
+    await expect(crearReserva(datos(), AHORA)).resolves.toMatchObject({ hora: '17:30' })
+  })
+
   it('no deja reservar un extra', async () => {
     rutas()
     await expect(crearReserva(datos({ servicio: SVC_EXTRA.uuid }), AHORA)).rejects.toMatchObject({ codigo: 'DATOS_INVALIDOS', campos: ['servicio'] })
@@ -162,6 +182,15 @@ describe('POST /api/reservas', () => {
     const r = await POST(req(peticion({ website: 'http://spam' })))
     expect(r.status).toBe(201)
     expect(llamadas).toHaveLength(0)
+  })
+
+  it('Origin de otra web → 403 sin llamar a Yeasy; el de la propia web pasa', async () => {
+    const llamadas = rutas()
+    const conOrigen = (origin: string) => new Request('http://x/api/reservas', { method: 'POST', headers: { origin }, body: JSON.stringify(peticion()) })
+    expect((await POST(conOrigen('https://otra-web.example'))).status).toBe(403)
+    expect((await POST(conOrigen('null'))).status).toBe(403)
+    expect(llamadas).toHaveLength(0)
+    expect((await POST(conOrigen('http://x'))).status).toBe(201)
   })
 
   it('JSON roto → 422', async () => {
