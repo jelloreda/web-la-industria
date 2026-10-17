@@ -1,6 +1,8 @@
 import { ErrorReserva } from './errores'
 
 export const YEASY_API = 'https://api.yeasy.io'
+export const YEASY_ORIGIN = 'https://app.yeasy.io'
+export const USER_AGENT = 'laindustria-web/1.0'
 const TIMEOUT_MS = 10_000
 
 export interface YServicio {
@@ -34,7 +36,14 @@ export async function yeasy<T>(ruta: string, { method = 'GET', body, auth = fals
   const url = new URL(ruta, YEASY_API)
   for (const [k, v] of Object.entries(query ?? {})) url.searchParams.set(k, v)
 
-  const headers: Record<string, string> = { 'Content-Type': 'application/json', 'x-app-version': '2.1.0' }
+  // Yeasy answers 403 without this Origin since Oct 2026 (same token goes 403→200 by adding it)
+  // and also rejects axios' default User-Agent. See CLAUDE.md "Booking API".
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'x-app-version': '2.1.0',
+    Origin: YEASY_ORIGIN,
+    'User-Agent': USER_AGENT,
+  }
   if (auth) {
     const token = process.env.YEASY_API_TOKEN
     if (!token) {
