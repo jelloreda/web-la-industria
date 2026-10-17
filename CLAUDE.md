@@ -53,6 +53,8 @@ Vercel Functions, the only door to `api.yeasy.io`. `api/_lib/` is shared code (n
 
 Env vars (Vercel, Preview + Production): `YEASY_API_TOKEN` (admin JWT, ~700 days — renewal steps in `contabilidad-la-industria/yeasy-mcp-server/README.md`). Customers are created with the sede's commerce uuid as creator (`createdBy`) and a random password nobody knows (Yeasy requires a non-empty one; customers use "olvidé mi contraseña" in the Yeasy app). `scripts/yeasy-sonda.mjs` re-checks the Yeasy contracts.
 
+Since Oct 2026 Yeasy returns 403 (it looks like an expired token, but isn't) to requests without `Origin: https://app.yeasy.io`, and to axios' default User-Agent. `api/_lib/yeasy.ts` sends `Origin` and `User-Agent: laindustria-web/1.0` on every call. If a generalized 403/503 appears again, don't assume the token expired: compare headers with a browser HAR (same diagnosis as `contabilidad-la-industria/yeasy-mcp-server/CLAUDE.md` → "Yeasy filtra por cabeceras").
+
 ### Styling
 
 Custom Tailwind color tokens (defined in `tailwind.config.ts`):

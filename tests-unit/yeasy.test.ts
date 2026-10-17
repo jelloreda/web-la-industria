@@ -17,6 +17,10 @@ describe('yeasy', () => {
     expect(llamadas[0].headers.Authorization).toBeUndefined()
     expect(llamadas[0].headers['x-app-version']).toBe('2.1.0')
     expect(llamadas[1].headers.Authorization).toBe('Bearer token-de-prueba')
+    expect(llamadas[0].headers.Origin).toBe('https://app.yeasy.io')
+    expect(llamadas[0].headers['User-Agent']).toBe('laindustria-web/1.0')
+    expect(llamadas[1].headers.Origin).toBe('https://app.yeasy.io')
+    expect(llamadas[1].headers['User-Agent']).toBe('laindustria-web/1.0')
   })
 
   it('añade la query y serializa el body', async () => {
