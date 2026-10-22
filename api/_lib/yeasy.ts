@@ -2,7 +2,11 @@ import { ErrorReserva } from './errores'
 
 export const YEASY_API = 'https://api.yeasy.io'
 export const YEASY_ORIGIN = 'https://app.yeasy.io'
-export const USER_AGENT = 'laindustria-web/1.0'
+// Same User-Agent the Yeasy web app sends (copied from a browser HAR, Oct 2026). Yeasy answers 403
+// to User-Agents that don't look like a browser: axios' default, and since 22-Oct also our own
+// 'laindustria-web/1.0', which had worked for days. A browser UA is the only one never rejected.
+export const USER_AGENT =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36'
 const TIMEOUT_MS = 10_000
 
 export interface YServicio {
@@ -37,7 +41,7 @@ export async function yeasy<T>(ruta: string, { method = 'GET', body, auth = fals
   for (const [k, v] of Object.entries(query ?? {})) url.searchParams.set(k, v)
 
   // Yeasy answers 403 without this Origin since Oct 2026 (same token goes 403→200 by adding it)
-  // and also rejects axios' default User-Agent. See CLAUDE.md "Booking API".
+  // and also rejects non-browser User-Agents (axios', and our own). See CLAUDE.md "Booking API".
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'x-app-version': '2.1.0',
