@@ -18,11 +18,11 @@ describe('yeasy', () => {
     expect(llamadas[0].headers['x-app-version']).toBe('2.1.0')
     expect(llamadas[1].headers.Authorization).toBe('Bearer token-de-prueba')
     expect(llamadas[0].headers.Origin).toBe('https://app.yeasy.io')
-    // Yeasy bloquea (403) los User-Agent que no parecen un navegador, incluido el propio
-    // 'laindustria-web/1.0' que pasaba hasta el 18-oct-2026. Ver CLAUDE.md "Booking API".
-    expect(llamadas[0].headers['User-Agent']).toMatch(/^Mozilla\/5\.0 .*Chrome\//)
+    // Yeasy filtra por User-Agent y la regla cambia sin avisar: bloqueó axios y uno propio (oct-2026) y,
+    // el 29-oct, también el de Chrome; 'node' era el único que pasaba. Ver CLAUDE.md "Booking API".
+    expect(llamadas[0].headers['User-Agent']).toBe('node')
     expect(llamadas[1].headers.Origin).toBe('https://app.yeasy.io')
-    expect(llamadas[1].headers['User-Agent']).toMatch(/^Mozilla\/5\.0 .*Chrome\//)
+    expect(llamadas[1].headers['User-Agent']).toBe('node')
   })
 
   it('añade la query y serializa el body', async () => {

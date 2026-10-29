@@ -2,11 +2,11 @@ import { ErrorReserva } from './errores'
 
 export const YEASY_API = 'https://api.yeasy.io'
 export const YEASY_ORIGIN = 'https://app.yeasy.io'
-// Same User-Agent the Yeasy web app sends (copied from a browser HAR, Oct 2026). Yeasy answers 403
-// to User-Agents that don't look like a browser: axios' default, and since 22-Oct also our own
-// 'laindustria-web/1.0', which had worked for days. A browser UA is the only one never rejected.
-export const USER_AGENT =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36'
+// Yeasy filters by User-Agent and the rule changes without notice. Oct 2026: it rejected axios' default and
+// our own 'laindustria-web/1.0'; the Chrome UA (the one its web app sends) worked for a week and was then
+// rejected too on 29 Oct ("Request blocked"), when only `node`/`curl` passed. Keep this in line with
+// contabilidad-la-industria/yeasy-mcp-server/src/constants.ts (see its CLAUDE.md "Yeasy filtra por cabeceras").
+export const USER_AGENT = 'node'
 const TIMEOUT_MS = 10_000
 
 export interface YServicio {
