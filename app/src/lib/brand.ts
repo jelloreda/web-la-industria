@@ -5,9 +5,9 @@ export type { SedeId }
 export const INSTAGRAM   = '@laindustria.barber'
 export const IG_URL      = 'https://www.instagram.com/laindustria.barber'
 
-// Campaña "dos sedes" en el hero. Poner a false a finales de octubre 2026
-// para volver al hero original.
-export const CAMPAIGN_ACTIVE = true
+// Campaña "dos sedes" en el hero. Desactivada a finales de octubre 2026
+// (hero original). Poner a true para volver a mostrarla.
+export const CAMPAIGN_ACTIVE = false
 
 // Reserva dentro de la web ('integrada') o enlaces a Yeasy como antes ('yeasy').
 // Si algo falla en producción, poner 'yeasy' y desplegar: vuelve el comportamiento anterior.
