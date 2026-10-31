@@ -46,7 +46,7 @@ export const LOCATIONS: Location[] = [
     phone: '+34 627 015 904',
     whatsappUrl: 'https://wa.me/34627015904',
     hours: HOURS,
-    barbers: ['Sanmil', 'Carlos', 'Mateo', 'Wuill'],
+    barbers: ['Sanmil', 'Carlos', 'Mateo', 'Wuill', 'Armella'],
   },
   {
     id: 'arguelles',
@@ -60,11 +60,11 @@ export const LOCATIONS: Location[] = [
     phone: '+34 627 015 904',
     whatsappUrl: 'https://wa.me/34627015904',
     hours: HOURS,
-    barbers: ['Luz', 'David', 'Edgar'],
+    barbers: ['Luz', 'David', 'Cristian'],
   },
 ]
 
-/** "Sanmil, Carlos, Mateo y Wuill" */
+/** "Sanmil, Carlos, Mateo, Wuill y Armella" */
 export function joinNames(names: string[]) {
   return names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} y ${names[names.length - 1]}`
 }
