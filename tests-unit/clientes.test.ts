@@ -20,7 +20,7 @@ describe('clientes', () => {
     expect((await buscarClientePorTelefono(COMMERCE_G, '+34612345678'))?.uuid).toBe('c-1')
     expect(await buscarClientePorTelefono(COMMERCE_G, '+34699000000')).toBeNull()
     expect(llamadas[0].ruta).toBe(`/customer/commerceAndCreatedBynewV2/${COMMERCE_G}`)
-    expect(llamadas[0].headers.Authorization).toBe('Bearer t')
+    expect(llamadas[0].headers.auth).toBe('true')
   })
 
   it('crea el cliente sin email, con nombre separado, el comercio como creador y contraseña aleatoria', async () => {

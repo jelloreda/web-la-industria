@@ -10,19 +10,15 @@ describe('yeasy', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
-  it('manda el token solo cuando auth es true, y la versión de app siempre', async () => {
+  it('llama al proxy con el secreto, pide el token solo si auth es true y no lo manda él mismo', async () => {
     const llamadas = fetchFalso({ 'GET /publico': () => ({ ok: 1 }), 'GET /privado': () => ({ ok: 2 }) })
     await yeasy('/publico')
     await yeasy('/privado', { auth: true })
-    expect(llamadas[0].headers.Authorization).toBeUndefined()
-    expect(llamadas[0].headers['x-app-version']).toBe('2.1.0')
-    expect(llamadas[1].headers.Authorization).toBe('Bearer token-de-prueba')
-    expect(llamadas[0].headers.Origin).toBe('https://app.yeasy.io')
-    // Yeasy filtra por User-Agent y la regla cambia sin avisar: bloqueó axios y uno propio (oct-2026) y,
-    // el 29-oct, también el de Chrome; 'node' era el único que pasaba. Ver CLAUDE.md "Booking API".
-    expect(llamadas[0].headers['User-Agent']).toBe('node')
-    expect(llamadas[1].headers.Origin).toBe('https://app.yeasy.io')
-    expect(llamadas[1].headers['User-Agent']).toBe('node')
+    expect(llamadas[0].headers['x-proxy-secret']).toBe('secreto-de-prueba')
+    expect(llamadas[0].headers.auth).toBe('false')
+    expect(llamadas[1].headers.auth).toBe('true')
+    // El token vive solo en el proxy (Origin, x-app-version y huella TLS también: ver api/yeasy_proxy.py).
+    expect(JSON.stringify(llamadas)).not.toContain('token-de-prueba')
   })
 
   it('añade la query y serializa el body', async () => {
@@ -38,6 +34,13 @@ describe('yeasy', () => {
     await expect(yeasy('/roto')).rejects.toBeInstanceOf(ErrorReserva)
     vi.stubGlobal('fetch', vi.fn(async () => { throw new TypeError('network') }))
     await expect(yeasy('/x')).rejects.toMatchObject({ codigo: 'AGENDA_NO_DISPONIBLE' })
+  })
+
+  it('sin secreto del proxy no llama a nada', async () => {
+    vi.stubEnv('YEASY_PROXY_SECRET', '')
+    const llamadas = fetchFalso({})
+    await expect(yeasy('/x')).rejects.toMatchObject({ codigo: 'AGENDA_NO_DISPONIBLE' })
+    expect(llamadas).toHaveLength(0)
   })
 
   it('sin token no llama a Yeasy', async () => {

@@ -6,6 +6,7 @@ export default defineConfig({
   test: {
     include: ['tests-unit/**/*.test.ts'],
     environment: 'node',
+    env: { YEASY_PROXY_SECRET: 'secreto-de-prueba' },
     restoreMocks: true,
     unstubGlobals: true,
     unstubEnvs: true,
