@@ -3,27 +3,35 @@
 //   node scripts/yeasy-sonda.mjs lectura
 //   SONDA_TELEFONO=+346XXXXXXXX node scripts/yeasy-sonda.mjs escritura --confirmo
 // Lee YEASY_API_TOKEN y YEASY_LOCATION_1_USER_UUID del .env del MCP sin imprimirlos.
+// Yeasy filtra por huella TLS (nov-2026): el fetch de Node recibe 403 con cualquier cabecera, así que
+// las peticiones salen por el puente curl_cffi del MCP (misma huella de Chrome que api/yeasy_proxy.py).
 import fs from 'node:fs'
+import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import { randomBytes } from 'node:crypto'
 
-const ENV_MCP = path.resolve(process.cwd(), '../contabilidad-la-industria/yeasy-mcp-server/.env')
+const DIR_MCP = path.resolve(process.cwd(), '../contabilidad-la-industria/yeasy-mcp-server')
+const ENV_MCP = path.join(DIR_MCP, '.env')
+const PUENTE = path.join(DIR_MCP, 'bridge/curl_bridge.py')
+const PYTHON = process.env.YEASY_PYTHON ?? path.join(DIR_MCP, '.venv/bin/python')
 const env = Object.fromEntries(
   fs.readFileSync(ENV_MCP, 'utf8').split('\n')
     .map(l => l.match(/^([A-Z0-9_]+)=(.*)$/)).filter(Boolean).map(m => [m[1], m[2].trim()]),
 )
 const API = 'https://api.yeasy.io'
+const ORIGIN = 'https://app.yeasy.io' // sin Origin Yeasy responde 403; el User-Agent lo pone curl_cffi
 const G = '6f554a4a-15ea-4752-9ea5-985791a6c972'
 const A = 'c14b04a8-a151-41e4-b042-0f8c5c678b42'
 const FIX = path.resolve('tests-unit/fixtures')
 
 async function y(ruta, { method = 'GET', body, auth = false } = {}) {
-  const headers = { 'Content-Type': 'application/json', 'x-app-version': '2.1.0' }
+  const headers = { 'Content-Type': 'application/json', 'x-app-version': '2.1.0', Origin: ORIGIN }
   if (auth) headers.Authorization = `Bearer ${env.YEASY_API_TOKEN}`
-  const res = await fetch(API + ruta, { method, headers, body: body && JSON.stringify(body) })
-  const texto = await res.text()
-  let datos; try { datos = JSON.parse(texto) } catch { datos = texto }
-  return { status: res.status, datos }
+  const entrada = JSON.stringify({ method, url: API + ruta, headers, body: body && JSON.stringify(body), timeout: 30 })
+  const salida = JSON.parse(execFileSync(PYTHON, [PUENTE], { input: entrada, encoding: 'utf8', maxBuffer: 50 * 1024 * 1024 }))
+  if (salida.error) throw new Error(`Puente curl_cffi: ${salida.error}`)
+  let datos; try { datos = JSON.parse(salida.body) } catch { datos = salida.body }
+  return { status: salida.status, datos }
 }
 const guardar = (nombre, datos) => fs.writeFileSync(path.join(FIX, nombre), JSON.stringify(datos, null, 2))
 const madrid = d => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' }).format(d)
